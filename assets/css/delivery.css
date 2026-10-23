@@ -1,0 +1,139 @@
+/*
+ * Collection & delivery page (/enlevement-livraison/) — ported from the <style> block of
+ * src/pages/enlevement-livraison.astro. The coverage map is in sections.css, which loads
+ * before this file.
+ */
+
+/* Hero actions, placed by the page inside the page hero's text column. */
+.dl-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.75rem;
+}
+
+/* — Steps ——————————————————————————————————————————————————————— */
+.dl-steps h2,
+.dl-zones h2 {
+  margin-top: 1.25rem;
+}
+
+.dl-steps__list {
+  display: grid;
+  gap: 0 clamp(2rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.dl-steps__list li {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding-block: 1.6rem 2rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.dl-steps__num {
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.dl-steps__list p {
+  color: var(--fg-2);
+  font-size: var(--fs-small);
+}
+
+/* — Zones and coverage map —————————————————————————————————————— */
+.dl-zones {
+  background: var(--white);
+}
+
+.dl-zones__grid {
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+
+.dl-zones__list {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+}
+
+.dl-zones__list > div {
+  padding-block: 1.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.dl-zones__list dd {
+  margin: 0.4rem 0 0;
+  color: var(--fg-2);
+  font-size: var(--fs-small);
+  max-width: 52ch;
+}
+
+.dl-zones__map {
+  max-width: 34rem;
+  justify-self: center;
+  width: 100%;
+}
+
+/* — Packaging ——————————————————————————————————————————————————— */
+.dl-pack {
+  background: var(--white);
+}
+
+.dl-pack__grid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.dl-pack__media {
+  aspect-ratio: 4 / 3;
+}
+
+.dl-pack__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dl-pack__text {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 32rem;
+}
+
+/* — Conditions —————————————————————————————————————————————————— */
+.dl-note {
+  background: var(--paper);
+  padding-top: 0;
+}
+
+.dl-note p {
+  max-width: 62ch;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+@media (min-width: 48rem) {
+  .dl-steps__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .dl-steps__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .dl-zones__grid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(4rem, 8vw, 9rem);
+  }
+
+  .dl-pack__grid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(4rem, 8vw, 9rem);
+  }
+}

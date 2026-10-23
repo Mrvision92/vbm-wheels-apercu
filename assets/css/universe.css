@@ -1,0 +1,302 @@
+/*
+ * Pages of the trades with a single page — /pneus/ and /entretien-mecanique/
+ * (app/views/pages/universe.php) — and the centre form's dialog (centre-form.js).
+ * Loads after forms.css, whose .cf field styles the centre form reuses.
+ */
+
+/* — Presentation: text and points beside a photograph ———————————————— */
+.uv-intro__grid {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.uv-intro__text {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.uv-intro__text .lead {
+  max-width: 44ch;
+}
+
+.uv-points {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.uv-points li {
+  display: grid;
+  gap: 0.3rem;
+  padding-block: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.uv-points p {
+  max-width: 52ch;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.uv-intro__figure {
+  margin: 0;
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 64rem) {
+  .uv-intro__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(4rem, 8vw, 8rem);
+  }
+
+  .uv-intro__figure {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* — Centres: white cards on the gallery ground, side by side ————————————— */
+.uv-centres {
+  background: var(--paper);
+}
+
+.uv-centres__head {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.uv-centres__head .lead {
+  max-width: 44ch;
+}
+
+.uv-centres__grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.uv-centre {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  background: var(--white);
+}
+
+.uv-centre__name {
+  margin-top: 0.35rem;
+  color: var(--fg-2);
+}
+
+.uv-centre__facts {
+  margin-block: 1.25rem 1.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.uv-centre__facts > div {
+  display: grid;
+  gap: 0.2rem;
+  padding-block: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.uv-centre__facts dt {
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.uv-centre__facts dd {
+  margin: 0;
+}
+
+.uv-centre__facts address {
+  font-style: normal;
+}
+
+.uv-centre__facts a {
+  text-decoration-color: var(--line-strong);
+}
+
+/* The actions sit at the bottom of every card, whatever the length of the address. */
+.uv-centre__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  margin-top: auto;
+}
+
+.uv-centres__note {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+@media (min-width: 48rem) {
+  .uv-centres__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Two centres: two cards of the width they would have among three, centred. */
+  .uv-centres__grid--2 {
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 64rem) {
+  .uv-centres__grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* — Form section: the centre form without JavaScript ——————————————————— */
+.uv-contact__grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.uv-contact__head {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.uv-contact__form {
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  background: var(--paper);
+}
+
+@media (min-width: 64rem) {
+  .uv-contact__grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: clamp(3rem, 7vw, 8rem);
+  }
+}
+
+/* — Centre form ——————————————————————————————————————————————— */
+.uvf__hint {
+  margin-top: -0.25rem;
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.uvf__fine {
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.uvf__fine a {
+  color: var(--fg);
+}
+
+.uvf__success {
+  justify-items: start;
+  gap: 0.75rem;
+  padding: 0;
+}
+
+.uvf__success:focus {
+  outline: none;
+}
+
+.uvf__success .cf__btn {
+  margin-top: 0.75rem;
+}
+
+/* — Dialog: the centre form, opened by each « Contactez-nous » button ————————
+ * A white panel, sharp corners, on a light frosted backdrop (like the header's fly-out scrim). */
+.uvd {
+  width: min(100% - 2rem, 40rem);
+  max-width: none;
+  max-height: calc(100svh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: var(--white);
+  color: var(--ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 30px 80px -24px rgb(0 0 0 / 0.28);
+}
+
+.uvd::backdrop {
+  background: rgb(232 232 237 / 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.uvd__inner {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1.25rem, 0.75rem + 2.5vw, 2.5rem);
+}
+
+.uvd__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block: -0.5rem -1rem;
+}
+
+.uvd__kicker {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.uvd__close {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.75rem;
+}
+
+.uvd__head {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.uvd__addr {
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.uvd__addr:empty {
+  display: none;
+}
+
+html.has-modal {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .uvd[open] {
+    animation: uvd-in 0.45s var(--ease-out);
+  }
+
+  .uvd[open]::backdrop {
+    animation: uvd-fade 0.45s var(--ease-out);
+  }
+}
+
+@keyframes uvd-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes uvd-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* forms.css marks the inputs and textarea of a field in error; the centre selector too. */
+.uvf .cf__field.has-error select {
+  border-color: #a3141b;
+}

@@ -1,0 +1,339 @@
+/*
+ * Service pages — ported from src/pages/services/index.astro (hub) and
+ * src/pages/services/[slug].astro (one page per service). The hub's Process section is in
+ * sections.css, which loads before this file.
+ */
+
+/* ── Hub (/services/): tiles and the "En détail" list ───────────────── */
+
+.hub {
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+}
+
+.hub__grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.detail__title {
+  text-align: center;
+}
+
+.detail__list {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--line);
+}
+
+.detail__row {
+  display: grid;
+  gap: 1rem;
+  padding-block: 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.detail__name p {
+  margin-top: 0.4rem;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+  max-width: 44ch;
+}
+
+.detail__signs {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.detail__signs li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.detail__signs li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.45rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.detail__row .btn {
+  justify-self: start;
+}
+
+@media (min-width: 40rem) {
+  .hub__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .hub__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .detail__row {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) auto;
+    gap: 3rem;
+    align-items: start;
+  }
+}
+
+/* ── Service page (/services/{slug}/) ────────────────────────────────── */
+
+/* Actions placed in the page hero, under the lead. */
+.svc-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.75rem;
+}
+
+.svc-intro {
+  background: var(--white);
+}
+
+.svc-process .container > .kicker,
+.svc-process .container > h2 {
+  text-align: center;
+}
+
+.svc-process .container {
+  display: grid;
+}
+
+.svc-process .container > .kicker {
+  justify-self: center;
+}
+
+.svc-intro__grid {
+  display: grid;
+  gap: 3rem;
+}
+
+.svc-intro__lead {
+  margin-top: 1.25rem;
+  font-size: clamp(1.1875rem, 1.06rem + 0.5vw, 1.4375rem);
+  font-weight: 440;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  max-width: 36em;
+}
+
+.svc-signs ul {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.svc-signs li {
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg-2);
+}
+
+/* Anchored highlight (#bi-ton on the diamond-cut page). */
+.svc-highlight__grid {
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+
+.svc-highlight__media {
+  aspect-ratio: 4 / 5;
+}
+
+.svc-highlight__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.svc-highlight__text {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 34rem;
+}
+
+.svc-steps {
+  display: grid;
+  gap: 0 clamp(2rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.svc-step {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding-block: 1.5rem 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.svc-step__num {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--stone-500);
+}
+
+.svc-step p {
+  color: var(--fg-2);
+  font-size: var(--fs-small);
+}
+
+.svc-tech__grid {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.svc-tech__grid h2 {
+  margin-top: 1.25rem;
+}
+
+.svc-tech__list {
+  border-top: 1px solid var(--line);
+}
+
+.svc-tech__list > div {
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.svc-tech__list dd {
+  margin: 0.5rem 0 0;
+  color: var(--fg-2);
+  max-width: 62ch;
+}
+
+.svc-tech__prose {
+  margin-top: 2rem;
+}
+
+.svc-limits {
+  background: var(--paper);
+}
+
+/* The centres strip follows the FAQ: its top rule replaces the section's top padding. */
+.svc-centres {
+  padding-top: 0;
+}
+
+.svc-centres__inner {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.svc-centres__text {
+  max-width: 52ch;
+  color: var(--fg-2);
+}
+
+.svc-centres__text a {
+  color: var(--fg);
+}
+
+.svc-limits__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.svc-limits__box,
+.svc-benefits {
+  padding: clamp(1.75rem, 3vw, 2.75rem);
+  border-radius: var(--radius);
+}
+
+.svc-limits__box {
+  background: var(--stone-100);
+  color: var(--ink);
+}
+
+.svc-benefits {
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.svc-limits__grid ul {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+.svc-limits__grid li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+}
+
+.svc-limits__box li {
+  color: var(--ink);
+}
+
+.svc-benefits li {
+  color: var(--fg-2);
+}
+
+.svc-limits__grid li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.55rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.svc-related h2 {
+  margin-top: 1rem;
+}
+
+.svc-related__grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+}
+
+@media (min-width: 40rem) {
+  .svc-steps,
+  .svc-related__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .svc-intro__grid,
+  .svc-tech__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(4rem, 8vw, 9rem);
+  }
+
+  .svc-tech__grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  }
+
+  .svc-highlight__grid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(4rem, 8vw, 8rem);
+  }
+
+  .svc-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .svc-limits__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .svc-related__grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+}

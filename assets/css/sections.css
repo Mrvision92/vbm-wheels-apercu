@@ -1,0 +1,414 @@
+/*
+ * Sections shared by several pages — ported from the <style> blocks of
+ * src/components/home/Process.astro, src/components/visuals/BeforeAfter.astro,
+ * src/components/visuals/BrusselsMap.astro, src/components/visuals/CoverageMap.astro and
+ * src/components/home/Visit.astro (scoping removed; class names are BEM-namespaced).
+ * Loaded before the page stylesheet, except on / and /contact/ where the reference cascade
+ * puts these sections after the page styles.
+ */
+
+/* — Process: "De l’examen à la finition." (/, /services/) ———————————————— */
+.process__head {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.process__grid {
+  display: grid;
+  gap: 1px;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.process__step {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  background: var(--paper);
+}
+
+.process__num {
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--stone-500);
+}
+
+.process__step p {
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+@media (min-width: 40rem) {
+  .process__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .process__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* — Before / after slider (home comparison, gallery viewer) ————————————————
+ * The development placeholders of the Astro component are not ported (only real
+ * photographs are rendered), so neither are their styles. */
+.ba {
+  --pos: 50%;
+  position: relative;
+  user-select: none;
+}
+
+.ba__frame {
+  position: relative;
+  aspect-ratio: var(--ba-ratio, 4 / 3);
+  overflow: hidden;
+  background: var(--ink-2);
+  isolation: isolate;
+}
+
+.ba__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.ba__layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ba__layer--after {
+  clip-path: inset(0 0 0 var(--pos));
+}
+
+.ba__tag {
+  position: absolute;
+  top: 1rem;
+  padding: 0.4rem 0.7rem;
+  font-size: var(--fs-xs);
+  font-weight: 520;
+  background: rgb(12 13 14 / 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-sm);
+  color: var(--white);
+}
+
+.ba__layer--before .ba__tag {
+  left: 1rem;
+}
+
+.ba__layer--after .ba__tag {
+  right: 1rem;
+}
+
+.ba__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 1px;
+  background: var(--white);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ba__knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.6);
+  transition: scale var(--dur-base) var(--ease-precise);
+}
+
+.ba.is-dragging .ba__knob {
+  scale: 0.92;
+}
+
+/* The native range input covers the whole frame, invisible: it is the control. */
+.ba__range {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ba__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 3.25rem;
+  height: 100vh;
+}
+
+.ba__range::-moz-range-thumb {
+  width: 3.25rem;
+  height: 100vh;
+  border: 0;
+}
+
+.ba:has(.ba__range:focus-visible) .ba__knob {
+  outline: 2px solid var(--white);
+  outline-offset: 4px;
+}
+
+/* — Brussels map: the region and the three centres ——————————————————— */
+.bxl-map {
+  position: relative;
+  margin: 0;
+}
+
+.bxl-map svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.bxl-map__region {
+  fill: var(--stone-150);
+  stroke: var(--stone-300);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.bxl-map__city circle {
+  fill: none;
+  stroke: var(--stone-500);
+  stroke-width: 1.2;
+}
+
+.bxl-map__city text {
+  font-size: 13px;
+  fill: var(--stone-500);
+}
+
+.bxl-map__pin text {
+  font-size: 16px;
+  font-weight: 540;
+  fill: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.bxl-map__dot {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 2.5;
+  transition: r var(--dur) var(--ease-out);
+}
+
+.bxl-map__halo {
+  fill: var(--ink);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity var(--dur) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transform: scale(0.5);
+}
+
+.bxl-map__pin.is-active .bxl-map__halo {
+  opacity: 0.12;
+  transform: scale(1);
+}
+
+.bxl-map__credit {
+  margin-top: 0.75rem;
+  font-size: 0.6875rem;
+  color: var(--fg-3);
+}
+
+/* — Coverage map of the collection & delivery service —————————————————— */
+.cov-map {
+  margin: 0;
+}
+
+.cov-map svg {
+  width: 100%;
+  height: auto;
+}
+
+.cov-map__country {
+  stroke: var(--stone-300);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  fill: none;
+}
+
+/* Belgium, the only country served; its neighbours keep the plain outline above. */
+.cov-map__country.is-full {
+  fill: var(--stone-200);
+  stroke: var(--stone-500);
+}
+
+.cov-map__labels text {
+  fill: var(--ink);
+  font-weight: 520;
+  letter-spacing: -0.01em;
+}
+
+.cov-map__labels .is-lg {
+  font-size: 26px;
+}
+
+.cov-map__bxl circle:not(.cov-map__halo) {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 2.5;
+}
+
+.cov-map__halo {
+  fill: var(--ink);
+  opacity: 0.1;
+}
+
+.cov-map__bxl text {
+  font-size: 20px;
+  font-weight: 540;
+  fill: var(--ink);
+}
+
+.cov-map__credit {
+  margin-top: 0.75rem;
+  font-size: 0.6875rem;
+  color: var(--fg-3);
+}
+
+/* — Visit: "Passez nous voir. Ou nous venons à vous." (/, /centres/, /contact/) ——— */
+.visit__head {
+  text-align: center;
+}
+
+.visit__grid {
+  display: grid;
+  gap: 3.5rem;
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+}
+
+.visit__col {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.visit__col > * {
+  justify-self: stretch;
+}
+
+/* The lone "Voir les centres" link keeps its own width. (The source also lists .visit__ctas here,
+ * but in the reference build the scoped rule above outranks it, so the CTA row stays stretched;
+ * its buttons sit at the start either way.) */
+.visit__col > .btn {
+  justify-self: start;
+}
+
+.visit__intro {
+  color: var(--fg-2);
+  max-width: 46ch;
+}
+
+.visit__map {
+  padding: clamp(1rem, 3vw, 2rem);
+  background: var(--white);
+}
+
+.visit__map .bxl-map__region {
+  fill: var(--stone-100);
+}
+
+/* The Belgium map is landscape (800 × 627): wider than the former portrait map, so that its
+ * panel stays close to the height of the Brussels map beside it. */
+.visit__map .cov-map {
+  max-width: 30rem;
+  margin-inline: auto;
+}
+
+.visit__list {
+  border-top: 1px solid var(--line);
+}
+
+.visit__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.visit__name {
+  display: block;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.visit__name:hover {
+  text-decoration: underline;
+}
+
+.visit__addr {
+  display: block;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.visit__actions {
+  display: flex;
+  gap: 1.25rem;
+  font-size: var(--fs-small);
+}
+
+.visit__actions a {
+  display: inline-block;
+  padding-block: 0.35rem;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.25em;
+}
+
+.visit__code {
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.visit__note {
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.visit__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 64rem) {
+  .visit__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+}

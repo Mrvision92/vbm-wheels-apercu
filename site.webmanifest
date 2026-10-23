@@ -1,14 +1,22 @@
 {
-  "name": "VBM Wheels Repair",
-  "short_name": "VBM Wheels",
-  "description": "Réparation, rénovation et personnalisation de jantes à Bruxelles.",
-  "lang": "fr-BE",
-  "start_url": "/",
-  "display": "browser",
-  "background_color": "#f6f5f2",
-  "theme_color": "#f6f5f2",
-  "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
-  ]
+    "name": "VBM Wheels Repair",
+    "short_name": "VBM Wheels",
+    "description": "Pneus, réparation de jantes, entretien et petite mécanique à Bruxelles.",
+    "lang": "fr-BE",
+    "start_url": "/vbm-wheels-apercu/",
+    "display": "browser",
+    "background_color": "#f6f5f2",
+    "theme_color": "#f6f5f2",
+    "icons": [
+        {
+            "src": "/vbm-wheels-apercu/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/vbm-wheels-apercu/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }

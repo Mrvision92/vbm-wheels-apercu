@@ -1,0 +1,867 @@
+/*
+ * Entry page (/: app/views/pages/entry.php, frame partials/entry-header.php and entry-footer.php,
+ * <body class="entry">) — the choice between the three trades, as one keynote slide: the
+ * two-tone headline, then the three trades as three-quarter line objects (tyre, alloy rim, brake
+ * disc and caliper, partials/entry-icons/) standing on one polished floor. On arrival each
+ * silhouette draws itself from the floor up and the details settle in; on hover, focus or a still
+ * touch the object plays its gesture (entry.js). Two stroke tiers only, like SF Symbols
+ * hierarchical rendering. Without JavaScript: three plain links, the objects fully drawn.
+ *
+ * Type, colour, the reset and the lists come from base.css; the rules marked « core » undo the
+ * few shared rules that would otherwise change this page.
+ */
+
+@property --rf {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+
+/* — Page: the bar, the stage (<main>) and the footer fill one screen ——————————————— */
+.entry {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-draw: cubic-bezier(0.33, 0, 0.2, 1);
+  --ease-turn: cubic-bezier(0.45, 0, 0.15, 1);
+  --icon: min(clamp(9rem, 2.5rem + 10.5vw, 14rem), 22 * var(--vh));
+  --floor: 0.90625; /* the objects stand on y = 58 of their 64 box */
+  --scale: 1.12; /* optical size: the objects fill 46 of 64 units */
+  --w: 0.75; /* primary stroke, view-box units (2.5 px at 1440) */
+  --w2: 0.42; /* secondary stroke */
+  --ink-2: var(--stone-500); /* secondary tier, #86868b */
+  --half-gap: clamp(0.5rem, 0.1rem + 1vw, 1.5rem); /* the columns touch: half the gap on each side */
+  --page: min(100% - 2 * var(--gutter), 76rem);
+  --vh: 1vh; /* every height of the composition is a share of the screen height (see preview) */
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* Preview build (is_preview()): the « Aperçu » banner (layout.css, one line from 960 px) takes a
+ * row of its own above the bar, and the composition is laid out in the height left below it, so
+ * a desktop screen still holds the whole page. */
+[data-preview] .entry {
+  --vh: calc(1vh - (1rem + 1.4 * var(--fs-xs) + 1px) / 100);
+
+  grid-template-rows: auto auto 1fr auto;
+}
+
+/* — The light: a soft studio spot, at rest on the headline, that follows the pointer (entry.js) ——— */
+.entry-spot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  --size: min(96rem, 130vmax); /* smaller layer on phones */
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 0.5) 46%, 74%, rgb(255 255 255 / 0) 100%);
+  background: radial-gradient(closest-side in oklab, rgb(255 255 255 / 1) 0%, rgb(255 255 255 / 0.5) 46%, 74%, rgb(255 255 255 / 0) 100%);
+  transform: translate3d(50vw, 30vh, 0);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* The light is dithered inside its own alpha (the view's SVG filter: blue noise, ±0.5 grey level,
+ * zero mean), so the 8-bit output never steps into rings. */
+.entry-spot {
+  filter: url(#vbm-entry-dither);
+}
+
+.entry-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Everything that shows stands above the light, the preview banner too. <main> itself stays
+ * unpositioned, so the light it contains shares the page's stacking order. */
+.entry > .preview-bar,
+.entry-bar,
+.entry-title,
+.entry-menu,
+.entry-foot {
+  position: relative;
+  z-index: 1;
+}
+
+/* — Header —————————————————————————————————————————————————— */
+.entry-bar {
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(1.25rem, 3.4 * var(--vh), 2.5rem);
+}
+
+.entry-bar__logo {
+  display: block;
+  width: auto;
+  height: 1.375rem;
+}
+
+/* — Stage: the layout's <main id="contenu"> ——————————————————————————————— */
+.entry > main {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding-block: min(4rem, 5 * var(--vh)) min(4.5rem, 5.5 * var(--vh));
+}
+
+.entry-title {
+  width: var(--page);
+  font-size: max(2rem, min(clamp(2.25rem, 0.75rem + 4.2vw, 5.25rem), 8.2 * var(--vh)));
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.026em;
+  text-align: center;
+  text-wrap: wrap; /* core: base.css balances headings */
+}
+
+.entry-title__line {
+  display: block;
+}
+
+.entry-title__tone {
+  color: var(--stone-600);
+}
+
+/* — Menu: three columns sharing their rows (subgrid); the columns touch, so a sweep never flickers ——— */
+.entry-menu {
+  width: var(--page);
+  margin-top: clamp(1.25rem, 7 * var(--vh) - 0.5rem, 5rem);
+}
+
+/* The gallery floor: one hairline the three objects stand on, fading out at both ends. */
+.entry-menu::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * min(4%, var(--gutter) * 0.75));
+  right: calc(-1 * min(4%, var(--gutter) * 0.75));
+  top: calc(0.5rem + var(--icon) * var(--floor));
+  height: 1px;
+  background: linear-gradient(90deg, rgb(29 29 31 / 0), rgb(29 29 31 / 0.14) 18%, rgb(29 29 31 / 0.14) 82%, rgb(29 29 31 / 0));
+  pointer-events: none;
+}
+
+.entry-menu__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(4, auto);
+  margin-inline: calc(-1 * var(--half-gap));
+}
+
+.entry-menu__cell {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+}
+
+.entry-trade {
+  position: relative;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  justify-items: center;
+  padding: 0.5rem var(--half-gap) 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* the keyboard ring sits on the pill (below), not round the whole column */
+.entry-trade:focus-visible {
+  outline: none;
+}
+
+/* The object on the floor */
+.entry-trade__icon {
+  position: relative;
+  display: block;
+  width: var(--icon);
+  aspect-ratio: 1;
+  margin-bottom: clamp(1rem, 4.6 * var(--vh), 2.75rem);
+  container-type: inline-size;
+  /* the floor is polished: a faint mirror image about the floor line (--rf fades it in) */
+  -webkit-box-reflect: below calc(var(--icon) * (var(--floor) - 1) * 2) linear-gradient(transparent 68%, rgb(0 0 0 / calc(var(--rf) * 0.09)) 90%, rgb(0 0 0 / calc(var(--rf) * 0.17)));
+}
+
+/* contact shadow where the object meets the floor */
+.entry-trade__floor {
+  position: absolute;
+  z-index: -1;
+  left: 20%;
+  right: 20%;
+  top: calc(var(--floor) * 100% - 2.25%);
+  height: 4.5%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(29 29 31 / 0.11), rgb(29 29 31 / 0));
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+}
+
+.ic {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  color: var(--ink);
+  stroke: currentColor;
+  stroke-width: var(--w);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: scale(var(--scale));
+  transform-origin: 50% 90.625%; /* the floor contact: the floor line stays put */
+}
+
+/* Two tiers, like SF Symbols hierarchical rendering: primary ink, secondary #86868b. */
+.ic .s2 {
+  stroke: var(--ink-2);
+  stroke-width: var(--w2);
+}
+
+.ic .dot {
+  fill: var(--ink-2);
+  stroke: none;
+}
+
+/* the cut that lets the caliper pass in front of the disc: one primary stroke of clearance */
+#vbm-entry-mt-cut use {
+  stroke-width: calc(var(--w) * 3);
+}
+
+.ic :is(.ic-in, .ic-spin, .ic-mark, .ic-cal, .ic-clamp) {
+  transform-box: view-box;
+}
+
+/* Small optical size (an object of 160 px or less): no lug dots, no caliper inset, heavier strokes. */
+@container (max-width: 160px) {
+  .ic {
+    --w: 0.9;
+    --w2: 0.6; /* at least 1.3 px */
+  }
+
+  .ic .lg {
+    display: none;
+  }
+}
+
+/* — Words ——————————————————————————————————————————————————— */
+.entry-trade__name {
+  font-size: clamp(1.5rem, 0.9rem + 1vw, 2.0625rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  white-space: nowrap;
+}
+
+.entry-trade__text {
+  max-width: 22.5em;
+  margin-top: 0.875rem;
+  color: var(--stone-600);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+  letter-spacing: -0.008em;
+  text-wrap: balance;
+}
+
+.entry-trade__cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: start;
+  gap: 0.4375rem;
+  margin-top: 1.375rem;
+  padding: 0.5625rem 1rem 0.5625rem 1.25rem;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.6);
+  box-shadow: inset 0 0 0 1px rgb(29 29 31 / 0.16);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.006em;
+  transition: background-color 300ms var(--ease), color 300ms var(--ease), box-shadow 300ms var(--ease), opacity 300ms var(--ease) 120ms, outline-color 300ms var(--ease);
+}
+
+.entry-trade__cta svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 300ms var(--ease);
+}
+
+/* — The trade in hand (hover, keyboard focus, touch press) ——————————————————— */
+/* un-dimming waits 120 ms, so leaving the row never pulses; dimming and lighting up are immediate */
+.entry-trade__icon,
+.entry-trade__name {
+  transition: opacity 300ms var(--ease) 120ms;
+}
+
+.entry-trade:focus-visible .entry-trade__cta,
+.entry-trade:active .entry-trade__cta,
+.entry-trade.is-press .entry-trade__cta,
+.entry-trade.is-chosen .entry-trade__cta {
+  background: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+  color: var(--white);
+  transition-duration: 180ms;
+}
+
+.entry-trade:focus-visible .entry-trade__cta {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.entry-trade:focus-visible .entry-trade__cta svg,
+.entry-trade:is(:active, .is-press) .entry-trade__cta svg {
+  transform: translateX(3px);
+}
+
+.entry-trade:is(:focus-visible, :active, .is-press) :is(.entry-trade__icon, .entry-trade__name, .entry-trade__cta) {
+  transition-delay: 0ms;
+}
+
+.entry-menu__list:has(.entry-trade:focus-visible) .entry-trade:not(:focus-visible) .entry-trade__icon,
+.entry-menu__list:has(.entry-trade:is(:active, .is-press)) .entry-trade:not(:active, .is-press) .entry-trade__icon {
+  opacity: 0.45;
+  transition-delay: 0ms;
+}
+
+.entry-menu__list:has(.entry-trade:focus-visible) .entry-trade:not(:focus-visible) :is(.entry-trade__name, .entry-trade__cta),
+.entry-menu__list:has(.entry-trade:is(:active, .is-press)) .entry-trade:not(:active, .is-press) :is(.entry-trade__name, .entry-trade__cta) {
+  opacity: 0.82; /* titles stay a step above the grey descriptions */
+  transition-delay: 0ms;
+}
+
+@media (hover: hover) {
+  .entry-trade:hover .entry-trade__cta {
+    background: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--ink);
+    color: var(--white);
+    transition-duration: 180ms;
+  }
+
+  .entry-trade:hover .entry-trade__cta svg {
+    transform: translateX(3px);
+  }
+
+  .entry-trade:hover .entry-trade__floor {
+    opacity: 0.75;
+    transform: scaleX(0.92);
+  }
+
+  .entry-trade:hover :is(.entry-trade__icon, .entry-trade__name, .entry-trade__cta) {
+    transition-delay: 0ms;
+  }
+
+  .entry-menu__list:has(.entry-trade:hover) .entry-trade:not(:hover) .entry-trade__icon {
+    opacity: 0.45;
+    transition-delay: 0ms;
+  }
+
+  .entry-menu__list:has(.entry-trade:hover) .entry-trade:not(:hover) :is(.entry-trade__name, .entry-trade__cta) {
+    opacity: 0.82;
+    transition-delay: 0ms;
+  }
+}
+
+/* — Footer —————————————————————————————————————————————————— */
+.entry-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  width: var(--page);
+  margin-inline: auto;
+  padding-block: 1rem clamp(1rem, 0.6rem + 1.4 * var(--vh), 2rem);
+  color: var(--stone-600);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+
+.entry-foot__links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* underline offset and thickness, focus ring: base.css */
+.entry-foot a {
+  text-decoration: none;
+  transition: color 300ms var(--ease);
+}
+
+.entry-foot a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.entry-foot a:focus-visible {
+  color: var(--ink);
+}
+
+/* — Motion: arrival, gestures, exit (all of it off for reduced motion) ——————————— */
+@media (prefers-reduced-motion: no-preference) {
+  .entry-spot {
+    animation: fade-in 1400ms var(--ease) backwards;
+  }
+
+  .entry-bar {
+    animation: fade-in 800ms var(--ease) 40ms backwards;
+  }
+
+  .entry-title__line {
+    animation: rise 900ms var(--ease) 100ms backwards;
+  }
+
+  .entry-title__tone {
+    animation-delay: 180ms;
+  }
+
+  /* the floor extends from the centre */
+  .entry-menu::before {
+    animation: horizon 1100ms var(--ease) 300ms backwards;
+  }
+
+  .entry-menu__cell {
+    --t: calc(380ms + var(--n) * 90ms);
+  }
+
+  /* a trade revealed later by scrolling (entry.js) starts at once */
+  .entry-trade.is-in {
+    --t: 0ms;
+  }
+
+  /* only the silhouette draws, up both sides from the floor contact … */
+  .ic .dr {
+    animation: ic-draw 750ms var(--ease-draw) var(--t) backwards;
+  }
+
+  /* … the details settle in as one piece … */
+  .ic .ic-in {
+    animation: ic-in 500ms var(--ease) calc(var(--t) + 350ms) backwards;
+  }
+
+  /* … and the caliper slides onto the disc once the disc is there */
+  .ic .ic-cal {
+    animation: ic-cal 600ms var(--ease) calc(var(--t) + 560ms) backwards;
+  }
+
+  .entry-trade__icon {
+    animation: reflect 850ms var(--ease) calc(var(--t) + 450ms) backwards;
+  }
+
+  .entry-trade__floor {
+    animation: fade-in 800ms var(--ease) calc(var(--t) + 300ms) backwards;
+  }
+
+  .entry-trade__name {
+    animation: rise 800ms var(--ease) calc(var(--t) + 400ms) backwards;
+  }
+
+  .entry-trade__text {
+    animation: rise 800ms var(--ease) calc(var(--t) + 460ms) backwards;
+  }
+
+  .entry-trade__cta {
+    animation: rise 800ms var(--ease) calc(var(--t) + 520ms) backwards;
+  }
+
+  .entry-foot {
+    animation: fade-in 700ms var(--ease) 1100ms backwards;
+  }
+
+  /* a trade below the fold waits until it is scrolled into view, then arrives once (entry.js);
+   * its name and description are clipped rather than hidden, so the link keeps its accessible name */
+  .entry-trade.is-wait :is(.entry-trade__icon, .entry-trade__cta),
+  .entry-trade.is-wait::before {
+    visibility: hidden;
+  }
+
+  .entry-trade.is-wait :is(.entry-trade__name, .entry-trade__text) {
+    clip-path: inset(50%);
+  }
+
+  .entry-trade.is-wait,
+  .entry-trade.is-wait *,
+  .entry-trade.is-wait::before {
+    animation: none !important;
+  }
+
+  /* gestures (1.1 s at most): the rim turns one spoke; the disc spins and the caliper bites it to a
+   * stop; the tyre rolls (entry.js turns its tread and the sidewall mark) */
+  .is-play .ic--wheel .ic-spin {
+    animation: ic-spin 900ms var(--ease-turn);
+  }
+
+  .is-play .ic--maintenance .ic-spin {
+    animation: ic-brake 1000ms cubic-bezier(0.25, 0.55, 0.2, 1);
+  }
+
+  .is-play .ic-clamp {
+    animation: ic-clamp 1000ms cubic-bezier(0.35, 0, 0.25, 1);
+  }
+
+  /* leaving: the chosen trade stays, the rest dissolves, then the page changes (entry.js) */
+  .is-leaving :is(.entry-bar, .entry-title, .entry-foot),
+  .is-leaving .entry-menu__cell:not(:has(.is-chosen)) {
+    opacity: 0;
+    transition: opacity 180ms var(--ease-soft);
+  }
+
+  .is-leaving .entry-menu::before {
+    opacity: 0;
+    transition: opacity 180ms var(--ease-soft);
+  }
+
+  .is-leaving .entry-trade__cta {
+    outline-color: transparent;
+  }
+}
+
+/* pathLength = 1: the dash sits just off the path at the start, so nothing shows before it moves */
+@keyframes ic-draw {
+  from {
+    stroke-dasharray: 1 1.2;
+    stroke-dashoffset: 1.1;
+  }
+
+  to {
+    stroke-dasharray: 1 1.2;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ic-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes ic-cal {
+  from {
+    opacity: 0;
+    transform: translate(1.4px, -1.4px);
+  }
+}
+
+/* Three-quarter view: a turn in the object's own plane is scaleX(cos 32°) rotate scaleX(1 / cos 32°).
+ * 72° and 144° map the five-fold patterns onto themselves: each gesture ends on the rest drawing. */
+@keyframes ic-spin {
+  from {
+    transform: scaleX(0.848) rotate(0deg) scaleX(1.1792);
+  }
+
+  to {
+    transform: scaleX(0.848) rotate(72deg) scaleX(1.1792);
+  }
+}
+
+@keyframes ic-brake {
+  from {
+    transform: scaleX(0.848) rotate(0deg) scaleX(1.1792);
+  }
+
+  to {
+    transform: scaleX(0.848) rotate(144deg) scaleX(1.1792);
+  }
+}
+
+/* the caliper bites: the spinning disc drags it a few degrees along the rim, then lets it settle back */
+@keyframes ic-clamp {
+  0%,
+  100% {
+    transform: scaleX(0.848) rotate(0deg) scaleX(1.1792);
+  }
+
+  36% {
+    transform: scaleX(0.848) rotate(6deg) scaleX(1.1792);
+  }
+}
+
+@keyframes horizon {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes reflect {
+  from {
+    --rf: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* — Below 960 px: a lead sentence keeps its own line —————————————————————————— */
+@media (max-width: 59.99rem) {
+  .entry-trade__lead {
+    display: block;
+  }
+}
+
+/* — From 960 px: the descriptions are set by hand, three lines each, so the three pills align ——— */
+@media (min-width: 60rem) {
+  .entry-trade__text span {
+    display: block;
+    white-space: nowrap;
+  }
+}
+
+/* — Short desktop viewports: everything stays on one screen ———————————————————— */
+@media (min-width: 60rem) and (max-height: 47.5rem) {
+  .entry {
+    --icon: min(clamp(8rem, 2.5rem + 10.5vw, 14rem), 20 * var(--vh));
+  }
+
+  .entry-bar {
+    padding-top: calc(3 * var(--vh));
+  }
+
+  .entry > main {
+    padding-block: calc(3 * var(--vh)) calc(3.5 * var(--vh));
+  }
+
+  .entry-title {
+    font-size: max(2rem, min(clamp(2.25rem, 0.75rem + 4.2vw, 5.25rem), 7.6 * var(--vh)));
+  }
+
+  .entry-menu {
+    margin-top: calc(5 * var(--vh));
+  }
+
+  .entry-trade__icon {
+    margin-bottom: calc(4 * var(--vh));
+  }
+
+  .entry-trade__name {
+    font-size: clamp(1.375rem, 0.8rem + 1vw, 2.0625rem);
+  }
+
+  .entry-trade__text {
+    margin-top: 0.625rem;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .entry-trade__cta {
+    margin-top: 1rem;
+  }
+
+  .entry-foot {
+    padding-block: 0.5rem calc(2.5 * var(--vh));
+  }
+}
+
+/* Preview build: up to 2.2rem (the banner) above that threshold, the composition already gets less
+ * than 47.5rem below the banner; the stage takes the short screens' padding so it still fits. */
+@media (min-width: 60rem) and (max-height: 49.7rem) {
+  [data-preview] .entry > main {
+    padding-block: calc(3 * var(--vh)) calc(3.5 * var(--vh));
+  }
+}
+
+/* — Tablet portrait: three rows, the object on the left, the words beside it ———————————— */
+@media (min-width: 48rem) and (max-width: 59.99rem) {
+  .entry {
+    --icon: 7rem;
+    --scale: 1.1;
+  }
+
+  .entry > main {
+    padding-block: 3rem 3.5rem;
+  }
+
+  .entry-menu {
+    width: min(var(--page), 37rem);
+    margin-top: 3rem;
+  }
+
+  .entry-menu::before {
+    display: none;
+  }
+
+  .entry-menu__list {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    margin-inline: 0;
+  }
+
+  .entry-menu__cell {
+    display: block;
+    grid-row: auto;
+  }
+
+  .entry-trade {
+    grid-template-columns: var(--icon) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-row: auto;
+    column-gap: 2.75rem;
+    align-content: center;
+    justify-items: start;
+    padding: 1.25rem 0 1.5rem;
+    text-align: left;
+  }
+
+  .entry-trade__icon {
+    grid-row: 1 / span 3;
+    align-self: center;
+    margin: 0;
+  }
+
+  /* each object on its own short strip of floor */
+  .entry-trade__icon::after {
+    content: '';
+    position: absolute;
+    left: -22%;
+    right: -22%;
+    top: calc(var(--floor) * 100%);
+    height: 1px;
+    background: linear-gradient(90deg, rgb(29 29 31 / 0), rgb(29 29 31 / 0.13) 30%, rgb(29 29 31 / 0.13) 70%, rgb(29 29 31 / 0));
+  }
+
+  .entry-trade__name {
+    align-self: end;
+  }
+
+  .entry-trade__text {
+    max-width: 25em;
+    margin-top: 0.5rem;
+    text-wrap: pretty;
+  }
+
+  .entry-trade__cta {
+    margin-top: 1rem;
+  }
+}
+
+/* — Phone: the three trades stacked, each on its own strip of floor ——————————————————— */
+@media (max-width: 47.99rem) {
+  .entry {
+    --icon: clamp(7.5rem, 1.5rem + 28vw, 9.75rem);
+    --scale: 1.1;
+    --w: 0.86;
+  }
+
+  .entry > main {
+    padding-block: clamp(2rem, 1rem + 4 * var(--vh), 3.5rem) 2.5rem;
+  }
+
+  .entry-title {
+    font-size: clamp(2.25rem, 0.9rem + 5.6vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.022em;
+  }
+
+  .entry-menu {
+    width: min(var(--page), 32rem);
+    margin-top: clamp(1.75rem, 0.5rem + 4 * var(--vh), 3rem);
+  }
+
+  .entry-menu::before {
+    display: none;
+  }
+
+  .entry-menu__list {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    row-gap: clamp(1.25rem, 0.25rem + 3 * var(--vh), 2.5rem);
+    margin-inline: 0;
+  }
+
+  .entry-menu__cell {
+    display: block;
+    grid-row: auto;
+  }
+
+  .entry-trade {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0 1.25rem;
+  }
+
+  .entry-trade::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(1rem + var(--icon) * var(--floor));
+    height: 1px;
+    background: linear-gradient(90deg, rgb(29 29 31 / 0), rgb(29 29 31 / 0.13) 26%, rgb(29 29 31 / 0.13) 74%, rgb(29 29 31 / 0));
+    pointer-events: none;
+  }
+
+  .entry-trade__icon {
+    margin-bottom: 1.625rem;
+  }
+
+  .entry-trade__name {
+    font-size: clamp(1.5rem, 1.05rem + 1.9vw, 1.875rem);
+    letter-spacing: -0.021em;
+  }
+
+  .entry-trade__text {
+    max-width: 20em;
+    margin-top: 0.625rem;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .entry-trade__cta {
+    align-self: center;
+    margin-top: 1.125rem;
+  }
+
+  .entry-foot {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.625rem;
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .entry-trade::before {
+      animation: horizon 1100ms var(--ease) calc(var(--t) + 150ms) backwards;
+    }
+  }
+}
+
+/* Reduced motion: nothing moves, but the trade in hand still fades at its own pace. Core:
+ * base.css cuts every transition to 0.01 ms; only the opacity and colour fades come back here
+ * (the contact shadow and the pill's arrow stay still). */
+@media (prefers-reduced-motion: reduce) {
+  .entry :is(.entry-trade__icon, .entry-trade__name, .entry-trade__cta, .entry-foot a) {
+    transition-duration: 300ms !important;
+  }
+
+  .entry .entry-trade:is(:focus-visible, :active, .is-press, .is-chosen) .entry-trade__cta {
+    transition-duration: 180ms !important;
+  }
+
+  .entry-trade__cta svg {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .entry .entry-trade:hover .entry-trade__cta {
+    transition-duration: 180ms !important;
+  }
+}

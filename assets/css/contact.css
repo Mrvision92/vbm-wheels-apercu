@@ -1,0 +1,68 @@
+/*
+ * Contact page (/contact/) — ported from the <style> block of src/pages/contact/index.astro.
+ * Loads after forms.css (contact form) and before sections.css (Visit), as in the reference.
+ */
+.contact {
+  padding-top: 0;
+}
+
+.contact__grid {
+  display: grid;
+  gap: 3rem;
+}
+
+.contact__direct {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+}
+
+.contact__big {
+  margin-top: 0.75rem;
+  font-size: var(--fs-h2);
+  font-stretch: var(--w-display);
+  font-weight: 460;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.contact__mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  width: fit-content;
+  text-decoration: none;
+}
+
+.contact__mail:hover,
+.contact__big:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+.contact__note {
+  margin-top: 1rem;
+  color: var(--fg-2);
+  font-size: var(--fs-small);
+}
+
+.contact__note a {
+  color: var(--fg);
+}
+
+.contact__form {
+  display: grid;
+  gap: 1.5rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+  border-radius: var(--radius);
+  background: var(--white);
+}
+
+@media (min-width: 64rem) {
+  .contact__grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: clamp(3rem, 7vw, 8rem);
+  }
+}

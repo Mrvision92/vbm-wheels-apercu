@@ -1,0 +1,122 @@
+/* Copied unchanged from src/styles/tokens.css of the Astro project. */
+/*
+ * VBM Wheels Repair — design tokens · direction « La Galerie »
+ *
+ * Architectural minimalism: a light gallery in which the object is presented
+ * with precision. Gallery ground #f8f8f8 (the tone of the studio photography),
+ * white rooms, near-black ink, one grey. Sharp corners; the only rounded
+ * shape is the pill button. One typeface, Mona Sans, set semibold and tight
+ * for headings. The Belgian tricolor stays in the logo.
+ */
+
+:root {
+  /* — Palette ——————————————————————————————————————————————— */
+  --black: #000000;
+  --ink: #1d1d1f;
+  --ink-2: #2c2c2e;
+  --ink-3: #3a3a3d;
+  --graphite: #48484a;
+  --stone-600: #6e6e73;
+  --stone-500: #86868b;
+  --stone-400: #a1a1a6;
+  --stone-300: #d2d2d0;
+  --stone-200: #e3e3e1;
+  --stone-150: #ebebe9;
+  --stone-100: #f2f2f0;
+  --paper: #f8f8f8;
+  --white: #ffffff;
+
+  --brand-yellow: #fcf000;
+  --brand-red: #ec1c24;
+
+  /* — Typography ———————————————————————————————————————————— */
+  --font: 'Mona Sans Variable', 'Mona Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --fs-hero: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
+  --fs-statement: clamp(2.25rem, 1.4rem + 3vw, 4rem);
+  --fs-h2: clamp(2rem, 1.35rem + 2.3vw, 3.25rem);
+  --fs-h3: clamp(1.3125rem, 1.15rem + 0.6vw, 1.75rem);
+  --fs-h4: 1.1875rem;
+  --fs-lead: clamp(1.1875rem, 1.12rem + 0.28vw, 1.3125rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-xs: 0.8125rem;
+  --fs-kicker: 1.0625rem;
+
+  --w-display: 100%;
+  --w-heading: 100%;
+  --w-text: 100%;
+
+  /* — Space & layout ——————————————————————————————————————— */
+  --gutter: clamp(1.25rem, 0.55rem + 2.9vw, 3rem);
+  --container: 75rem;
+  --container-wide: 90rem;
+  --container-text: 44rem;
+  --section-y: clamp(5.5rem, 3.6rem + 6vw, 9rem);
+  --section-y-sm: clamp(3.5rem, 2.5rem + 3.5vw, 6rem);
+  --header-h: 3rem;
+
+  /* — Shape & motion ——————————————————————————————————————— */
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-pill: 999px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 200ms;
+  --dur: 350ms;
+  --dur-slow: 800ms;
+  --dur-image: 1200ms;
+}
+
+/* Semantic themes. Sections opt in with .theme-white / .theme-stone / .theme-dark */
+:root,
+.theme-light {
+  --bg: var(--paper);
+  --bg-raised: var(--white);
+  --bg-muted: var(--stone-100);
+  --fg: var(--ink);
+  --fg-2: var(--stone-600);
+  --fg-3: var(--stone-600);
+  --line: var(--stone-200);
+  --line-strong: var(--stone-300);
+  --focus: var(--ink);
+  --btn-bg: var(--ink);
+  --btn-fg: var(--white);
+  --btn-hover: var(--ink-3);
+  --btn-2-border: var(--stone-300);
+  --selection: rgb(29 29 31 / 0.14);
+  --selection-fg: var(--ink);
+  color-scheme: light;
+}
+
+.theme-white {
+  --bg: var(--white);
+  --bg-raised: var(--paper);
+}
+
+.theme-stone {
+  --bg: var(--stone-100);
+  --bg-raised: var(--white);
+  --line: #dededc;
+}
+
+/* Reserved for rare, deliberate contrast (e.g. media viewers). */
+.theme-dark {
+  --bg: var(--black);
+  --bg-raised: #1c1c1e;
+  --bg-muted: #161617;
+  --fg: #f5f5f7;
+  --fg-2: #a1a1a6;
+  --fg-3: #a1a1a6;
+  --line: #2c2c2e;
+  --line-strong: #424245;
+  --focus: #f5f5f7;
+  --btn-bg: #f5f5f7;
+  --btn-fg: var(--ink);
+  --btn-hover: #e8e8ed;
+  --btn-2-border: rgb(255 255 255 / 0.3);
+  --selection: rgb(255 255 255 / 0.25);
+  --selection-fg: #fff;
+  color-scheme: dark;
+}

@@ -1,0 +1,886 @@
+/*
+ * Quote and contact forms and the pages around them — ported from
+ * src/components/forms/QuoteForm.astro and ContactForm.astro, then the <style> blocks of
+ * src/pages/demande-de-devis/index.astro (quote page), demande-de-devis/merci.astro (thank-you
+ * page) and formulaire-erreur.astro (form error page). /contact/merci/ has no page styles.
+ *
+ * Elements created by the scripts (photo thumbnails, links of the error summary) never carried
+ * the Astro scope attribute: only the rules written with :global() in the source reached them.
+ */
+
+/* ── Quote form (QuoteForm.astro) ─────────────────────────────────────── */
+.qf {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.qf__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Steps */
+.qf__step {
+  display: grid;
+  gap: 1.75rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.qf.is-enhanced .qf__step {
+  display: none;
+}
+
+.qf.is-enhanced .qf__step.is-active {
+  display: grid;
+  animation: step-in 420ms var(--ease-out);
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.qf__legend {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0;
+  margin-bottom: 0.25rem;
+  font-size: var(--fs-h3);
+  font-stretch: var(--w-heading);
+  font-weight: 500;
+  letter-spacing: -0.016em;
+}
+
+.qf__legend:focus {
+  outline: none;
+}
+
+.qf__legend-num {
+  font-size: var(--fs-small);
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.qf__progress {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.qf__progress li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--line);
+  transition:
+    border-color var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out);
+}
+
+.qf__progress span {
+  font-variant-numeric: tabular-nums;
+}
+
+.qf__progress li[aria-current],
+.qf__progress li.is-done {
+  border-color: var(--ink);
+  color: var(--fg);
+}
+
+/* Fields */
+.qf__row {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.qf__field {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.qf__label {
+  font-size: var(--fs-small);
+  font-weight: 540;
+}
+
+.qf__req,
+.qf__opt {
+  margin-left: 0.35rem;
+  font-weight: 400;
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.qf__hint,
+.qf__intro {
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.qf__intro {
+  font-size: var(--fs-small);
+  max-width: 60ch;
+}
+
+.qf input[type='text'],
+.qf input[type='email'],
+.qf input[type='tel'],
+.qf textarea,
+.qf select {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--fg);
+  font-size: 1rem;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.qf textarea {
+  resize: vertical;
+  min-height: 8rem;
+  line-height: 1.5;
+}
+
+.qf input::placeholder,
+.qf textarea::placeholder {
+  color: #8b8d90;
+}
+
+.qf input:hover,
+.qf textarea:hover,
+.qf select:hover {
+  border-color: var(--stone-500);
+}
+
+.qf input:focus-visible,
+.qf textarea:focus-visible,
+.qf select:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgb(20 21 23 / 0.12);
+}
+
+.qf__select {
+  position: relative;
+}
+
+.qf__select select {
+  appearance: none;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+.qf__select svg {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+/* Chips */
+.qf__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.qf__chip,
+.qf__segmented label,
+.qf__card {
+  position: relative;
+  cursor: pointer;
+}
+
+.qf__chip input,
+.qf__segmented input,
+.qf__card input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.qf__chip span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--white);
+  font-size: var(--fs-small);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.qf__chip:hover span {
+  border-color: var(--ink);
+}
+
+.qf__chip input:checked + span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+.qf__chip input:focus-visible + span,
+.qf__segmented input:focus-visible + span,
+.qf__card input:focus-visible ~ .qf__card-title {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.qf__segmented {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--white);
+}
+
+.qf__segmented label + label {
+  border-left: 1px solid var(--line-strong);
+}
+
+.qf__segmented span {
+  display: grid;
+  place-items: center;
+  min-height: 3.25rem;
+  font-size: var(--fs-small);
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.qf__segmented input:checked + span {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.qf__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.qf__card {
+  display: grid;
+  gap: 0.15rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.qf__card:hover {
+  border-color: var(--ink);
+}
+
+.qf__card:has(input:checked) {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.qf__card-title {
+  font-weight: 540;
+}
+
+.qf__card-sub {
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+/* Delivery (progressive disclosure) */
+.qf__delivery {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.qf.is-enhanced .qf__delivery:not(.is-open) {
+  display: none;
+}
+
+/* Upload */
+.qf__drop {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: 2.25rem 1.5rem;
+  border: 1px dashed var(--stone-400);
+  border-radius: var(--radius);
+  background: var(--white);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out);
+}
+
+.qf__drop:hover,
+.qf__drop.is-over {
+  border-color: var(--ink);
+  background: var(--stone-100);
+}
+
+.qf__drop:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.qf__drop input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.qf__drop-title {
+  font-weight: 540;
+}
+
+.qf__drop-hint {
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.qf__thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.qf__thumbs:empty {
+  display: none;
+}
+
+/* Thumbnails, created by quote-form.js. */
+.qf__thumbs .qf__thumb {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.qf__thumbs .qf__thumb img,
+.qf__thumbs .qf__thumb-ph {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--stone-150);
+}
+
+.qf__thumbs .qf__thumb-ph {
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-xs);
+  color: var(--fg-2);
+}
+
+.qf__thumbs .qf__thumb-name {
+  font-size: 0.75rem;
+  color: var(--fg-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qf__thumbs .qf__thumb-remove {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: rgb(12 13 14 / 0.75);
+  color: var(--white);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* Checkbox */
+.qf__check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+  cursor: pointer;
+}
+
+.qf__check input {
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+  accent-color: var(--ink);
+}
+
+.qf__check a {
+  color: var(--fg);
+}
+
+/* Errors */
+.qf__error {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: #a3141b;
+}
+
+.qf__error:empty {
+  display: none;
+}
+
+.qf__field.has-error input:not([type='radio']):not([type='checkbox']),
+.qf__field.has-error textarea,
+.qf__field.has-error select,
+.qf__field.has-error .qf__segmented,
+.qf__field.has-error .qf__drop {
+  border-color: #a3141b;
+}
+
+.qf__summary {
+  padding: 1.25rem 1.5rem;
+  border-left: 3px solid #a3141b;
+  border-radius: var(--radius-sm);
+  background: #fbf1f0;
+}
+
+.qf__summary:focus {
+  outline: 2px solid #a3141b;
+  outline-offset: 2px;
+}
+
+.qf__summary-title {
+  font-weight: 560;
+}
+
+.qf__summary ul {
+  margin-top: 0.5rem;
+  padding-left: 1.1rem;
+}
+
+/*
+ * The source also colours the summary links (.qf__summary a { color: #7c0f14; }). Those links are
+ * created by the script, so that scoped rule never reached them in the reference build and they
+ * inherit the text colour. The rule is left out so the summary renders the same.
+ */
+
+/* Navigation */
+.qf__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.qf__nav:not(:has([data-prev]:not([hidden]))) {
+  justify-content: flex-end;
+}
+
+.qf__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.125rem;
+  padding: 0 1.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 540;
+  transition: background-color var(--dur) var(--ease-out);
+}
+
+.qf__btn:hover {
+  background: var(--ink-3);
+}
+
+.qf__btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.qf__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  color: var(--fg-2);
+}
+
+.qf__back:hover {
+  color: var(--fg);
+}
+
+.qf .qf__flip {
+  transform: scaleX(-1);
+}
+
+.qf__fine {
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.qf__status:empty {
+  display: none;
+}
+
+.qf__status {
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+/* Success */
+.qf-success {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(2rem, 4vw, 3rem);
+  border-radius: var(--radius);
+  background: var(--white);
+}
+
+.qf-success:focus {
+  outline: none;
+}
+
+.qf-success__icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+}
+
+.qf-success__steps {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.qf-success__steps li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  color: var(--fg-2);
+}
+
+.qf-success__steps span {
+  color: var(--fg-3);
+  font-size: var(--fs-small);
+}
+
+.qf-success__alt a {
+  color: var(--fg);
+}
+
+@media (min-width: 40rem) {
+  .qf__row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .qf__field--half {
+    max-width: calc(50% - 0.875rem);
+  }
+
+  .qf__cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ── Contact form (ContactForm.astro) ─────────────────────────────────── */
+.cf {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.cf__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.cf__row {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.cf__field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cf__field > label:not(.cf__check) {
+  font-size: var(--fs-small);
+  font-weight: 540;
+}
+
+.cf__req,
+.cf__opt {
+  margin-left: 0.35rem;
+  font-weight: 400;
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.cf input[type='text'],
+.cf input[type='email'],
+.cf input[type='tel'],
+.cf textarea,
+.cf select {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font-size: 1rem;
+}
+
+.cf textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.cf input:focus-visible,
+.cf textarea:focus-visible,
+.cf select:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgb(20 21 23 / 0.12);
+}
+
+.cf__check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.cf__check input {
+  width: 1.35rem;
+  height: 1.35rem;
+  accent-color: var(--ink);
+}
+
+.cf__check a {
+  color: var(--fg);
+}
+
+.cf__error {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: #a3141b;
+}
+
+.cf__error:empty {
+  display: none;
+}
+
+.cf__field.has-error input,
+.cf__field.has-error textarea {
+  border-color: #a3141b;
+}
+
+.cf__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cf__btn {
+  min-height: 3.125rem;
+  padding: 0 1.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 540;
+}
+
+.cf__btn:hover {
+  background: var(--ink-3);
+}
+
+.cf__btn:disabled {
+  opacity: 0.6;
+}
+
+.cf__status {
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.cf-success {
+  display: grid;
+  gap: 0.5rem;
+  padding: 2rem;
+  border-radius: var(--radius);
+  background: var(--white);
+}
+
+@media (min-width: 40rem) {
+  .cf__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Quote page (demande-de-devis/index.astro) ────────────────────────── */
+.quote {
+  padding-top: 0;
+}
+
+.quote__grid {
+  display: grid;
+  gap: 3rem;
+}
+
+.quote__form {
+  min-width: 0;
+}
+
+.quote__aside {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.quote__box {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--radius);
+  background: var(--white);
+}
+
+.quote__box--dark {
+  background: var(--stone-100);
+  color: var(--ink);
+}
+
+.quote__steps {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quote__steps li {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.quote__steps span {
+  color: var(--fg-3);
+}
+
+.quote__contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.quote__contact:hover {
+  text-decoration: underline;
+}
+
+.quote__note {
+  font-size: var(--fs-small);
+  color: var(--fg-2);
+}
+
+.quote__note a {
+  color: var(--ink);
+}
+
+@media (min-width: 64rem) {
+  .quote__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+
+  .quote__aside {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+}
+
+/* ── Quote thank-you page (demande-de-devis/merci.astro) ──────────────── */
+.merci__steps {
+  display: grid;
+  gap: 0.75rem;
+  width: min(100%, 36rem);
+  margin-block: 1rem 1.5rem;
+}
+
+.merci__steps li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  color: var(--fg-2);
+}
+
+/* ── Form error page (formulaire-erreur.astro) ────────────────────────── */
+.err__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.err__alt {
+  margin-top: 1rem;
+  color: var(--fg-2);
+}
+
+.err__alt a {
+  color: var(--fg);
+}

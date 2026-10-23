@@ -1,0 +1,163 @@
+/*
+ * About page (/a-propos/) — ported from the <style> block of src/pages/a-propos.astro.
+ * The Brussels map is in sections.css, which loads before this file.
+ */
+
+/* — Chapters: photograph (or map) and text, alternating sides ————————— */
+.chapters {
+  background: var(--white);
+}
+
+.chapters .container {
+  display: grid;
+  gap: clamp(5rem, 11vw, 10rem);
+}
+
+.chapter {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.chapter__frame {
+  aspect-ratio: 4 / 5;
+}
+
+.chapter__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chapter__map {
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+
+.chapter__text {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 34rem;
+}
+
+.chapter__body {
+  color: var(--fg-2);
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+}
+
+.chapter__claim {
+  font-weight: 540;
+}
+
+/* — Commitments and timeline ———————————————————————————————————— */
+.principles h2,
+.timeline h2 {
+  margin-top: 1.25rem;
+}
+
+.principles__list {
+  display: grid;
+  gap: 0 clamp(2rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.principles__list li {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding-block: 1.6rem 2rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.principles__num {
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+.principles__list p {
+  color: var(--fg-2);
+  font-size: var(--fs-small);
+}
+
+.timeline {
+  background: var(--white);
+}
+
+.timeline__list {
+  display: grid;
+  gap: 0 clamp(2rem, 4vw, 4rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.timeline__list li {
+  display: grid;
+  gap: 0.4rem;
+  padding-block: 1.75rem 2rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.timeline__year {
+  font-size: var(--fs-statement);
+  font-stretch: var(--w-display);
+  font-weight: 380;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.timeline__place {
+  margin-top: 0.75rem;
+  font-weight: 540;
+}
+
+.timeline__list p {
+  color: var(--fg-2);
+  font-size: var(--fs-small);
+  max-width: 34ch;
+}
+
+.timeline__source {
+  margin-top: 1.5rem;
+  font-size: var(--fs-xs);
+  color: var(--fg-3);
+}
+
+/* — Closing statement ——————————————————————————————————————————— */
+.closing {
+  background: var(--white);
+  padding-top: 0;
+}
+
+.closing__text {
+  max-width: 22em;
+}
+
+@media (min-width: 48rem) {
+  .principles__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .timeline__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .chapter {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(4rem, 8vw, 9rem);
+  }
+
+  .chapter--flip .chapter__media {
+    order: 2;
+  }
+
+  .chapter--flip {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+
+  .principles__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

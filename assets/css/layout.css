@@ -1,0 +1,632 @@
+/*
+ * Page frame — ported from src/layouts/Base.astro (global rule), src/components/layout/Header.astro,
+ * src/components/layout/Footer.astro and src/layouts/Legal.astro (scoping removed).
+ */
+
+/* — Base layout ———————————————————————————————————————————————— */
+main:focus {
+  outline: none;
+}
+
+/* Preview build only (tools/export-static.php, is_preview()): a slim notice above the header,
+ * which scrolls away while the header stays. */
+.preview-bar {
+  padding: 0.5rem var(--gutter);
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ═══ Header: « La Galerie » navigation — a slim translucent bar (48px), centred links,
+ * one small pill. "Services" opens a light fly-out panel; below 64rem the links move into
+ * a full-screen native <dialog> (behaviour: assets/js/site.js). ═══ */
+
+/* — Bar ——————————————————————————————————————————————————— */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  color: var(--ink);
+  background: rgb(248 248 248 / 0.8);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--stone-200);
+  transition: background-color var(--dur) var(--ease-soft);
+}
+
+.nav.is-open {
+  background: rgb(248 248 248 / 0.97);
+}
+
+.nav__inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.nav__brand .logo {
+  width: 110px;
+}
+
+.nav__links {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: none;
+}
+
+.nav__links ul {
+  display: flex;
+  gap: clamp(1.25rem, 0.2rem + 2vw, 2.5rem);
+}
+
+.nav__link {
+  display: block;
+  padding-block: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1;
+  letter-spacing: -0.002em;
+  color: rgb(29 29 31 / 0.8);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease-soft);
+}
+
+.nav__link:hover,
+.nav__link[aria-expanded='true'],
+.nav__link.is-current {
+  color: var(--ink);
+}
+
+.nav__link.is-current {
+  font-weight: 600;
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.nav__tel {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: rgb(29 29 31 / 0.8);
+}
+
+.nav__tel:hover {
+  color: var(--ink);
+}
+
+.nav__pill {
+  position: relative;
+  display: none;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0 0.875rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--dur) var(--ease-soft);
+}
+
+.nav__pill::after {
+  content: '';
+  position: absolute;
+  inset: -8px -6px;
+}
+
+.nav__pill:hover {
+  background: var(--ink-3);
+}
+
+.nav__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.75rem;
+}
+
+.bars,
+.cross {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.bars span,
+.cross span {
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 1.25px;
+  background: var(--ink);
+}
+
+.bars span:first-child {
+  top: 5.5px;
+}
+
+.bars span:last-child {
+  top: 11.5px;
+}
+
+.cross span {
+  top: 8.5px;
+}
+
+.cross span:first-child {
+  rotate: 45deg;
+}
+
+.cross span:last-child {
+  rotate: -45deg;
+}
+
+@media (min-width: 40rem) {
+  .nav__pill {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 64rem) {
+  .nav__links {
+    display: block;
+  }
+
+  .nav__toggle {
+    display: none;
+  }
+}
+
+/* — Header of the pages outside the wheel site (tyres, maintenance, legal, 404):
+ * the logo and one link per trade — at the right on small screens, centred from 64rem.
+ * Short labels ("Jantes") below 48rem, full labels above. —————————————————— */
+.nav__metiers ul {
+  display: flex;
+  gap: clamp(1.25rem, 0.2rem + 2vw, 2.5rem);
+}
+
+.nav__long {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .nav__short {
+    display: none;
+  }
+
+  .nav__long {
+    display: inline;
+  }
+}
+
+@media (min-width: 64rem) {
+  .nav__metiers {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+  }
+}
+
+/* — Services fly-out —————————————————————————————————————— */
+.flyout {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgb(248 248 248 / 0.97);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--stone-200);
+  animation: flyout-in 420ms var(--ease-out);
+}
+
+@keyframes flyout-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.flyout__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 3rem;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-block: 2.5rem 3.5rem;
+}
+
+.flyout__label {
+  margin-bottom: 0.875rem;
+  font-size: 0.75rem;
+  color: var(--stone-600);
+}
+
+.flyout__big {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 2rem;
+}
+
+.flyout__big a {
+  display: inline-block;
+  padding-block: 0.2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.flyout__big a:hover,
+.flyout__big a[aria-current='page'] {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.18em;
+}
+
+.flyout__small {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.flyout__small a {
+  display: inline-block;
+  padding-block: 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.flyout__small a:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flyout__big li {
+    animation: flyout-item 520ms var(--ease-out) both;
+    animation-delay: calc(40ms + var(--i) * 25ms);
+  }
+}
+
+@keyframes flyout-item {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.nav-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgb(232 232 237 / 0.4);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  animation: flyout-in 420ms var(--ease-out);
+}
+
+/* — Mobile menu ——————————————————————————————————————— */
+.menu {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.menu[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu::backdrop {
+  background: transparent;
+}
+
+.menu__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  height: var(--header-h);
+  padding-inline: var(--gutter);
+  border-bottom: 1px solid var(--stone-200);
+}
+
+.menu__close {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-right: -0.75rem;
+}
+
+.menu__nav {
+  padding: 1.75rem var(--gutter) 0;
+}
+
+.menu__primary a {
+  display: block;
+  padding-block: 0.45rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.016em;
+  text-decoration: none;
+}
+
+.menu__label {
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--stone-600);
+}
+
+.menu__services {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+}
+
+.menu__services a {
+  display: block;
+  padding-block: 0.55rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.menu__foot {
+  display: grid;
+  justify-items: start;
+  gap: 0.15rem;
+  margin-top: auto;
+  padding: 1.75rem var(--gutter) max(2rem, env(safe-area-inset-bottom));
+}
+
+.menu__pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0 1.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.menu__line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  color: var(--stone-600);
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu[open] {
+    animation: menu-in 0.45s var(--ease-out) both;
+  }
+
+  .menu[open] .menu__primary li {
+    animation: menu-item 0.6s var(--ease-out) both;
+    animation-delay: calc(0.06s + var(--i) * 0.04s);
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes menu-item {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+html.menu-open {
+  overflow: hidden;
+}
+
+/* ═══ Footer: light, precise, small type — everything findable, nothing shouting. ═══ */
+
+.footer {
+  background: var(--stone-100);
+  color: var(--stone-600);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: -0.002em;
+}
+
+.footer__inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-block: 3rem 1.5rem;
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.footer__top {
+  display: grid;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--stone-200);
+}
+
+.footer__top .logo {
+  width: 130px;
+}
+
+.footer__baseline {
+  max-width: 52ch;
+  font-size: 0.8125rem;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+  padding-block: 2rem;
+  border-bottom: 1px solid var(--stone-200);
+}
+
+.footer__grid h2 {
+  margin-bottom: 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.footer__grid ul {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.footer__grid li a {
+  display: inline-block;
+  padding-block: 0.3rem;
+}
+
+.footer__addr {
+  padding-block: 0.15rem;
+}
+
+/* Trades offered by a centre (footer outside the wheel site). */
+.footer__offer {
+  padding-top: 0.35rem;
+  color: var(--ink);
+}
+
+.footer__contact {
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--stone-200);
+}
+
+.footer__contact a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--stone-300);
+  text-underline-offset: 0.2em;
+}
+
+/* « Nos autres métiers » (wheel footer). */
+.footer__others {
+  margin-top: 0.5rem;
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-top: 1rem;
+}
+
+/* Keep the last line clear of the floating WhatsApp button on small screens. */
+@media (max-width: 63.99rem) {
+  .footer--wa .footer__bottom {
+    padding-bottom: 4.75rem;
+  }
+}
+
+.footer__bottom ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+
+.footer__bottom a {
+  display: inline-block;
+  padding-block: 0.4rem;
+}
+
+@media (min-width: 48rem) {
+  .footer__top {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .footer__baseline {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .footer__grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .footer__grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ═══ Legal pages (/mentions-legales/, /confidentialite/) ═══ */
+.legal {
+  background: var(--white);
+  padding-top: clamp(3rem, 6vw, 5rem);
+}
+
+.legal__prose {
+  max-width: 70ch;
+}
+
+.legal__prose h2 {
+  scroll-margin-top: calc(var(--header-h) + 1.5rem);
+}
+
+/* Photo credits list closing the legal notice. */
+.credits {
+  font-size: var(--fs-small);
+}
