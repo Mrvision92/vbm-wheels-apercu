@@ -33,7 +33,7 @@
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/layout.css?v=tndmzr">
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/forms.css?v=tn9x2e">
 <script type="module" src="/vbm-wheels-apercu/assets/js/site.js?v=tn9ur8"></script>
-<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tnbuqe"></script>
+<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tndocd"></script>
 </head>
 <body class="theme-light">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -143,7 +143,7 @@
     <div class="quote__form">
 <form id="formulaire" class="qf" action="/vbm-wheels-apercu/api/devis.php" method="post" enctype="multipart/form-data" data-quote-form>
   <input type="hidden" name="form" value="devis">
-  <input type="hidden" name="started_at" value="1792787506.c9b5a96a536510ffb14d10c29a899b45b86fcc942366212114665f2c4cdd9f8b">  <div class="qf__hp" aria-hidden="true">
+  <input type="hidden" name="started_at" value="1792788623.7145311b69ff148c7afab476a32bf8ed4fa92771b413fd35b23e1a585209b4fb">  <div class="qf__hp" aria-hidden="true">
     <label>Ne pas remplir ce champ <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
   </div>
 
@@ -171,10 +171,11 @@
     </div>
 
     <div class="qf__field" data-field="finition">
-      <p class="qf__label" id="lbl-finition">Finition <span class="qf__req">obligatoire</span></p>
+      <p class="qf__label" id="lbl-finition">Finition <span class="qf__opt">si besoin</span></p>
       <div class="qf__chips" role="radiogroup" aria-labelledby="lbl-finition" aria-describedby="err-finition">
-        <label class="qf__chip"><input type="radio" name="finition" value="une-couleur" required><span>Une couleur</span></label>
-        <label class="qf__chip"><input type="radio" name="finition" value="bi-ton" required><span>Bi-ton (deux couleurs)</span></label>
+        <label class="qf__chip"><input type="radio" name="finition" value="une-couleur"><span>Une couleur</span></label>
+        <label class="qf__chip"><input type="radio" name="finition" value="bi-ton"><span>Bi-ton (deux couleurs)</span></label>
+        <label class="qf__chip"><input type="radio" name="finition" value="sans"><span>Sans finition</span></label>
       </div>
       <p class="qf__error" id="err-finition" data-error></p>
     </div>

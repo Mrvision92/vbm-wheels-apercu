@@ -94,7 +94,6 @@ function init(form) {
     const e = {};
     if (n === 1) {
       if (!val('service')) e.service = 'Choisissez le type d’intervention.';
-      if (!val('finition')) e.finition = 'Indiquez la finition de vos jantes.';
       if (!val('wheels')) e.wheels = 'Indiquez le nombre de jantes.';
       if (val('message').length < 10) e.message = 'Décrivez le problème en quelques mots (au moins 10 caractères).';
     }
