@@ -54,26 +54,20 @@
   }
 }
 
-/* — Centres: white cards on the gallery ground, side by side ————————————— */
+/* — Centres: right under the page hero, white cards on the gallery ground, side by side, then
+ *   the hero photograph ——————————————————————————————————————————————— */
+.phero:has(+ .uv-centres) {
+  padding-bottom: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+}
+
 .uv-centres {
+  padding-bottom: var(--section-y);
   background: var(--paper);
-}
-
-.uv-centres__head {
-  display: grid;
-  justify-items: center;
-  gap: 1rem;
-  text-align: center;
-}
-
-.uv-centres__head .lead {
-  max-width: 44ch;
 }
 
 .uv-centres__grid {
   display: grid;
   gap: 1rem;
-  margin-top: clamp(2.5rem, 5vw, 4rem);
 }
 
 .uv-centre {
