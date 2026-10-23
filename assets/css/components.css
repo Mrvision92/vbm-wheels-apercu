@@ -1,7 +1,8 @@
 /*
  * UI components shared by every page — ported from src/components/ui/*.astro and
  * src/components/brand/Logo.astro (scoping removed; class names are BEM-namespaced).
- * Order: logo, icon, button, breadcrumbs, page hero, tile, CTA band, FAQ, WhatsApp button.
+ * Order: logo, icon, button, breadcrumbs, page hero, tile, CTA band, FAQ, WhatsApp button, call
+ * picker (the last one has no Astro reference: partials/call-picker.php).
  */
 
 /* — Logo ———————————————————————————————————————————————————— */
@@ -538,6 +539,245 @@
 
 @media print {
   .wa {
+    display: none;
+  }
+}
+
+/* — Call picker « Appeler un centre » (partials/call-picker.php, site.js) ———————————
+ * A native modal <dialog>: a white sheet anchored to the bottom on phones (full width, clear of
+ * the home indicator), a centred panel from 40rem, on a soft dim backdrop. One generous row per
+ * centre between fine rules, the « Annuler » pill below. Sharp corners, like every panel. */
+.call {
+  --call-pad: var(--gutter);
+  --call-from: translateY(100%);
+  --call-from-opacity: 1;
+  width: 100%;
+  max-width: none;
+  max-height: calc(100svh - 2.5rem);
+  margin: auto 0 0;
+  padding: 0;
+  border: 0;
+  background: var(--white);
+  color: var(--ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 -24px 60px -30px rgb(0 0 0 / 0.3);
+}
+
+.call::backdrop {
+  background: rgb(29 29 31 / 0.3);
+}
+
+.call__panel {
+  padding: 1.75rem var(--call-pad) max(1.5rem, env(safe-area-inset-bottom));
+}
+
+.call__head {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 1.25rem;
+}
+
+.call__title {
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* It takes the focus when the dialog opens, so that screen readers start at the title. */
+.call__title:focus {
+  outline: none;
+}
+
+.call__lead {
+  font-size: var(--fs-small);
+  color: var(--stone-600);
+}
+
+.call__list {
+  margin-inline: calc(-1 * var(--call-pad));
+  border-top: 1px solid var(--line);
+}
+
+.call__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'icon name num'
+    'icon addr addr';
+  align-items: center;
+  gap: 0.15rem 1rem;
+  padding: 1rem var(--call-pad);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-fast) var(--ease-soft);
+}
+
+.call__row:active {
+  background: var(--paper);
+}
+
+.call__row:focus-visible {
+  outline-offset: -2px;
+}
+
+.call__icon {
+  grid-area: icon;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--stone-100);
+  transition:
+    background-color var(--dur-fast) var(--ease-soft),
+    color var(--dur-fast) var(--ease-soft);
+}
+
+.call__row:focus-visible .call__icon {
+  background: var(--ink);
+  color: var(--white);
+}
+
+/* Hover only where a pointer hovers: a tap must not leave a row lit for the next opening. */
+@media (hover: hover) {
+  .call__row:hover {
+    background: var(--paper);
+  }
+
+  .call__row:hover .call__icon {
+    background: var(--ink);
+    color: var(--white);
+  }
+}
+
+.call__name {
+  grid-area: name;
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  line-height: 1.25;
+}
+
+/* Proportional figures, like every phone number of the site (Mona Sans's tabular ones look
+ * monospaced); the numbers sit right-aligned one above the other. */
+.call__num {
+  grid-area: num;
+  font-variant-numeric: normal;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.004em;
+  white-space: nowrap;
+}
+
+.call__addr {
+  grid-area: addr;
+  font-size: var(--fs-xs);
+  line-height: 1.35;
+  color: var(--stone-600);
+}
+
+/* A long street wraps before the postcode, never between the postcode and the locality. */
+.call__place {
+  white-space: nowrap;
+}
+
+.call__cancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3.125rem;
+  margin-top: 1.5rem;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--btn-2-border);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow var(--dur-fast) var(--ease-soft);
+}
+
+.call__cancel:hover,
+.call__cancel:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+@media (min-width: 40rem) {
+  .call {
+    --call-pad: 2rem;
+    --call-from: translateY(0.75rem) scale(0.98);
+    --call-from-opacity: 0;
+    width: min(100% - 2rem, 26rem);
+    max-height: calc(100svh - 2rem);
+    margin: auto;
+    box-shadow: 0 30px 80px -24px rgb(0 0 0 / 0.3);
+  }
+
+  .call__panel {
+    padding-block: 2rem;
+  }
+}
+
+/* The page behind does not scroll while the dialog is open (site.js sets the class). Where the
+ * scrollbar takes room (Windows, macOS set to always show it), site.js measures the width it frees
+ * (--call-gap) and the page and the WhatsApp button give it back: nothing shifts sideways.
+ * (scrollbar-gutter: stable would not do: Chrome drops the gutter of a styled scrollbar.) */
+html.call-open {
+  overflow: hidden;
+  padding-inline-end: var(--call-gap, 0px);
+}
+
+html.call-open .wa {
+  margin-right: var(--call-gap, 0px);
+}
+
+/* Opening and closing: 200 ms while the backdrop fades. The sheet stays opaque and slides (it
+ * rises easing out, and leaves easing in-out, so that it is seen going down); from 40rem the panel
+ * settles and fades. Browsers without @starting-style or transition-behavior simply open and
+ * close it. */
+@media (prefers-reduced-motion: no-preference) {
+  .call,
+  .call::backdrop {
+    --call-ease: var(--ease-in-out);
+    transition:
+      opacity var(--dur-fast) var(--call-ease),
+      transform var(--dur-fast) var(--call-ease),
+      overlay var(--dur-fast) allow-discrete,
+      display var(--dur-fast) allow-discrete;
+  }
+
+  .call[open],
+  .call[open]::backdrop {
+    --call-ease: var(--ease-out);
+  }
+
+  .call:not([open])::backdrop {
+    opacity: 0;
+  }
+
+  .call:not([open]) {
+    opacity: var(--call-from-opacity);
+    transform: var(--call-from);
+    pointer-events: none;
+  }
+
+  @starting-style {
+    .call[open]::backdrop {
+      opacity: 0;
+    }
+
+    .call[open] {
+      opacity: var(--call-from-opacity);
+      transform: var(--call-from);
+    }
+  }
+}
+
+@media print {
+  .call {
     display: none;
   }
 }

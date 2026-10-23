@@ -884,3 +884,8 @@
 .err__alt a {
   color: var(--fg);
 }
+
+/* « Laeken : 02 427 33 53 », « E-mail : … »: a line breaks only at the « · » between two of them. */
+.err__line {
+  white-space: nowrap;
+}

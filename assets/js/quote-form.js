@@ -314,9 +314,9 @@ function init(form) {
       }
       status.textContent = data.message || 'L’envoi a échoué. Réessayez ou appelez-nous.';
     } catch {
-      // The number printed in the success panel (app/data/site.php); the literal is only a fallback.
-      const tel = success?.querySelector('a[href^="tel:"]')?.textContent ?? '02 523 20 02';
-      status.textContent = `Connexion impossible. Vérifiez votre connexion internet ou appelez-nous au ${tel}.`;
+      // The centres' lines, as the call picker of the page lists them (partials/call-picker.php).
+      const lines = [...document.querySelectorAll('[data-call-line]')].map((a) => a.dataset.callLine).join(', ');
+      status.textContent = `Connexion impossible. Vérifiez votre connexion internet ou appelez l’un de nos centres${lines ? `\u00a0: ${lines}` : ''}.`;
     } finally {
       submitBtn.disabled = false;
       submitLabel.textContent = 'Envoyer ma demande';

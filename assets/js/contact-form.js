@@ -69,9 +69,9 @@ if (form) {
       if (data.errors) show(data.errors);
       status.textContent = data.message || 'L’envoi a échoué. Réessayez ou appelez-nous.';
     } catch {
-      // The main number printed in the footer (app/data/site.php); the literal is only a fallback.
-      const tel = document.querySelector('.footer__contact a[href^="tel:"]')?.textContent ?? '02 523 20 02';
-      status.textContent = `Connexion impossible. Appelez-nous au ${tel}.`;
+      // The centres' lines, as the call picker of the page lists them (partials/call-picker.php).
+      const lines = [...document.querySelectorAll('[data-call-line]')].map((a) => a.dataset.callLine).join(', ');
+      status.textContent = `Connexion impossible. Appelez l’un de nos centres${lines ? `\u00a0: ${lines}` : ''}.`;
     } finally {
       btn.disabled = false;
     }

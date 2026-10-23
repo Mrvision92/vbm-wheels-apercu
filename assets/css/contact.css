@@ -17,14 +17,43 @@
   gap: 0.75rem;
 }
 
-.contact__big {
-  margin-top: 0.75rem;
-  font-size: var(--fs-h2);
+/* The centres' direct lines: a short ruled list, the district at the left and its number set
+ * large at the right (proportional figures, like every number of the site set this large). Kept
+ * narrow, so that on a single-column tablet layout the district stays close to its number. */
+.contact__lines {
+  max-width: 28rem;
+  margin-block: 0.5rem 0.75rem;
+  border-top: 1px solid var(--line-strong);
+}
+
+.contact__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+
+.contact__district {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--fg-2);
+  transition: color var(--dur) var(--ease-soft);
+}
+
+.contact__num {
+  font-size: var(--fs-h3);
   font-stretch: var(--w-display);
   font-weight: 460;
-  letter-spacing: -0.025em;
-  text-decoration: none;
-  width: fit-content;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.contact__line:hover .contact__district {
+  color: var(--fg);
 }
 
 .contact__mail {
@@ -37,7 +66,7 @@
 }
 
 .contact__mail:hover,
-.contact__big:hover {
+.contact__line:hover .contact__num {
   text-decoration: underline;
   text-decoration-thickness: 1px;
 }
