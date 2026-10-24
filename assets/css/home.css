@@ -75,6 +75,45 @@
   margin-top: 1.875rem;
 }
 
+/* The owner's note under the buttons: requests can also be sent on WhatsApp. A quiet white pill,
+ * the WhatsApp green kept for the mark only (the floating button's #1da851). */
+.hero__wa {
+  margin-top: 1.5rem;
+}
+
+.hero__wa a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1.125rem 0.55rem 0.875rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  letter-spacing: -0.006em;
+  color: var(--stone-600);
+  text-decoration: none;
+  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.hero__wa .icon {
+  flex: none;
+  color: #1da851;
+}
+
+.hero__wa-num {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.hero__wa a:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
 /* — The object ——————————————————————————————————————————— */
 .hero__figure {
   /* Eased feather: no straight edge, no visible frame. */
@@ -160,6 +199,17 @@
     margin-top: 1.75rem;
   }
 
+  .hero__wa a {
+    border-radius: 1.375rem;
+    padding: 0.7rem 1.125rem 0.7rem 0.875rem;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  .hero__wa-more {
+    display: none;
+  }
+
   .hero__figure {
     --fx: 10%;
     --fy-top: 9%;
@@ -196,7 +246,8 @@
   }
 
   .hero__sub,
-  .hero__links {
+  .hero__links,
+  .hero__wa {
     animation: galerie-rise 1s var(--ease-out) both;
   }
 
@@ -206,6 +257,10 @@
 
   .hero__links {
     animation-delay: 0.2s;
+  }
+
+  .hero__wa {
+    animation-delay: 0.28s;
   }
 
   .hero__specs {

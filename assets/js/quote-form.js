@@ -95,7 +95,6 @@ function init(form) {
     if (n === 1) {
       if (!val('service')) e.service = 'Choisissez le type d’intervention.';
       if (!val('wheels')) e.wheels = 'Indiquez le nombre de jantes.';
-      if (val('message').length < 10) e.message = 'Décrivez le problème en quelques mots (au moins 10 caractères).';
     }
     if (n === 2) {
       const err = checkFiles(files);
@@ -106,7 +105,7 @@ function init(form) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val('email'))) e.email = 'Indiquez une adresse e-mail valide, par exemple nom@exemple.be.';
       if (val('phone') && !/^[0-9 +().\/-]{6,30}$/.test(val('phone'))) e.phone = 'Le numéro de téléphone ne semble pas valide.';
       if (!val('centre')) e.centre = 'Choisissez un centre ou l’enlèvement.';
-      if (val('centre') === 'livraison' && val('address').length < 8) e.address = 'Indiquez l’adresse d’enlèvement en Belgique (rue, numéro, code postal, localité).';
+      if (val('centre') === 'livraison' && val('address').length < 8) e.address = 'Indiquez l’adresse d’enlèvement (rue, numéro, code postal, localité).';
       if (!val('consent')) e.consent = 'Votre accord est nécessaire pour que nous puissions traiter votre demande.';
     }
     return e;

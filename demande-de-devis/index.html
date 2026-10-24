@@ -33,14 +33,14 @@
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/layout.css?v=tndmzr">
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/forms.css?v=tndt9p">
 <script type="module" src="/vbm-wheels-apercu/assets/js/site.js?v=tndt9p"></script>
-<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tndt9p"></script>
+<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tnfiku"></script>
 </head>
 <body class="theme-light">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
 <aside class="preview-bar" aria-label="Version d’aperçu"><p>Aperçu du nouveau site — version de travail, pas encore en ligne. Les formulaires n’envoient rien.</p></aside>
 <header class="nav" data-nav>
   <div class="nav__inner">
-    <a class="nav__brand" href="/vbm-wheels-apercu/jantes/" aria-label="VBM Wheels Repair — réparation de jantes"><img class="logo" src="/vbm-wheels-apercu/brand/vbm-logo-dark.svg" alt="VBM Wheels Repair" width="110" height="17" loading="eager" decoding="async"></a>
+    <a class="nav__brand" href="/vbm-wheels-apercu/" aria-label="VBM Wheels Repair — accueil"><img class="logo" src="/vbm-wheels-apercu/brand/vbm-logo-dark.svg" alt="VBM Wheels Repair" width="110" height="17" loading="eager" decoding="async"></a>
     <nav class="nav__links" aria-label="Navigation principale">
       <ul role="list">
         <li data-flyout><button type="button" class="nav__link" aria-expanded="false" aria-controls="nav-services" data-flyout-trigger>Services</button></li>
@@ -94,7 +94,7 @@
 <div class="nav-scrim" data-flyout-scrim hidden></div>
 <dialog id="nav-menu" class="menu" aria-label="Menu" data-menu>
   <div class="menu__bar">
-    <a class="nav__brand" href="/vbm-wheels-apercu/jantes/" aria-label="VBM Wheels Repair — réparation de jantes"><img class="logo" src="/vbm-wheels-apercu/brand/vbm-logo-dark.svg" alt="VBM Wheels Repair" width="110" height="17" loading="eager" decoding="async"></a>
+    <a class="nav__brand" href="/vbm-wheels-apercu/" aria-label="VBM Wheels Repair — accueil"><img class="logo" src="/vbm-wheels-apercu/brand/vbm-logo-dark.svg" alt="VBM Wheels Repair" width="110" height="17" loading="eager" decoding="async"></a>
     <button class="menu__close" type="button" data-menu-close><span class="visually-hidden">Fermer le menu</span><span class="cross" aria-hidden="true"><span></span><span></span></span></button>
   </div>
   <nav class="menu__nav" aria-label="Menu principal">
@@ -143,7 +143,7 @@
     <div class="quote__form">
 <form id="formulaire" class="qf" action="/vbm-wheels-apercu/api/devis.php" method="post" enctype="multipart/form-data" data-quote-form>
   <input type="hidden" name="form" value="devis">
-  <input type="hidden" name="started_at" value="1792794834.06025b9d33993ad2fb6961bb13c58f2c7bfd5b26d16482eaa72b5fc1e84b8fd6">  <div class="qf__hp" aria-hidden="true">
+  <input type="hidden" name="started_at" value="1792874369.fce4bf32082d58af9adb6b70649d87846e960c093d80a7855f7a27db46d3b0b5">  <div class="qf__hp" aria-hidden="true">
     <label>Ne pas remplir ce champ <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
   </div>
 
@@ -222,8 +222,8 @@
     </div>
 
     <div class="qf__field" data-field="message">
-      <label class="qf__label" for="f-message">Décrivez le problème <span class="qf__req">obligatoire</span></label>
-      <textarea id="f-message" name="message" rows="5" required minlength="10" maxlength="4000" aria-describedby="hint-message err-message" placeholder="Ex. : vibrations dans le volant depuis un choc, jante qui perd de l’air…"></textarea>
+      <label class="qf__label" for="f-message">Décrivez le problème <span class="qf__opt">facultatif</span></label>
+      <textarea id="f-message" name="message" rows="5" maxlength="4000" aria-describedby="hint-message err-message" placeholder="Ex. : vibrations dans le volant depuis un choc, jante qui perd de l’air…"></textarea>
       <p class="qf__hint" id="hint-message">Où se situe le dommage, depuis quand, finition souhaitée…</p>
       <p class="qf__error" id="err-message" data-error></p>
     </div>
@@ -290,7 +290,7 @@
       <div class="qf__field" data-field="address">
         <label class="qf__label" for="f-address">Adresse d’enlèvement <span class="qf__opt">si enlèvement</span></label>
         <textarea id="f-address" name="address" rows="2" autocomplete="street-address" maxlength="400" aria-describedby="hint-address err-address"></textarea>
-        <p class="qf__hint" id="hint-address">En Belgique&nbsp;: rue, numéro, code postal et localité.</p>
+        <p class="qf__hint" id="hint-address">Rue, numéro, code postal et localité. Hors de Belgique&nbsp;: sur demande.</p>
         <p class="qf__error" id="err-address" data-error></p>
       </div>
     </div>
@@ -337,6 +337,7 @@
       <div class="quote__box quote__box--dark">
         <h2 class="t-h4">Vous préférez en parler&nbsp;?</h2>
         <a href="tel:+3225232002" class="quote__contact" data-call><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M6.6 3.75h2.6l1.4 4.1-1.9 1.25a11.2 11.2 0 0 0 6.2 6.2l1.25-1.9 4.1 1.4v2.6a2 2 0 0 1-2.15 2A16.6 16.6 0 0 1 4.6 5.9a2 2 0 0 1 2-2.15Z"/></svg>Appeler un centre</a>
+        <a href="https://wa.me/32476218211?text=Bonjour%20VBM%2C%20je%20vous%20envoie%20ma%20demande%20pour%20mes%20jantes." class="quote__contact" target="_blank" rel="noopener"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path stroke-linejoin="round" d="M3.6 20.4l1.2-4.3A8.4 8.4 0 1 1 8 19.3Z"/><path fill="currentColor" stroke="none" d="M9.2 7.6c.25-.25.65-.22.86.06l1.02 1.4c.18.25.16.6-.06.82l-.62.62a6.2 6.2 0 0 0 3.1 3.1l.62-.62c.22-.22.57-.24.82-.06l1.4 1.02c.28.21.31.61.06.86l-.72.72c-.55.55-1.38.74-2.1.45A9.6 9.6 0 0 1 8.03 10.4c-.29-.72-.1-1.55.45-2.1Z"/></svg>WhatsApp · <span class="tnum">+32 476 21 82 11</span><span class="visually-hidden"> (nouvel onglet)</span></a>
         <a href="mailto:info@vbmwheels.com" class="quote__contact"><svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M3.75 5.75h16.5v12.5H3.75z"/><path d="m4 6.25 8 6.5 8-6.5"/></svg>info@vbmwheels.com</a>
         <p class="quote__note">Nos trois centres&nbsp;: Laeken, Anderlecht et Evere. <a href="/vbm-wheels-apercu/centres/">Adresses</a></p>
       </div>
@@ -347,7 +348,7 @@
 <footer class="footer footer--wa">
   <div class="footer__inner">
     <div class="footer__top">
-      <a href="/vbm-wheels-apercu/jantes/" aria-label="VBM Wheels Repair — réparation de jantes"><img class="logo" src="/vbm-wheels-apercu/brand/vbm-logo-dark.svg" alt="VBM Wheels Repair" width="130" height="20" loading="lazy" decoding="async"></a>
+      <a href="/vbm-wheels-apercu/" aria-label="VBM Wheels Repair — accueil"><img class="logo" src="/vbm-wheels-apercu/brand/vbm-logo-dark.svg" alt="VBM Wheels Repair" width="130" height="20" loading="lazy" decoding="async"></a>
       <p class="footer__baseline">Réparation, rénovation et personnalisation de jantes en aluminium. Trois centres à Bruxelles ; enlèvement et livraison partout en Belgique.</p>
     </div>
     <div class="footer__grid">
