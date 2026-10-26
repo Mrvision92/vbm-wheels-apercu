@@ -4,6 +4,7 @@
  * Progressive enhancement of app/views/forms/quote-form.php: the form works as one long classic
  * POST without this script. With it: three steps with a progress bar, prefill from the URL
  * (?service=…, ?centre=…, ?livraison=1; a service the form does not offer preselects nothing),
+ * the « Finition » field shown for the complete repair only (its data-finish-for),
  * inline validation with an error summary, photo previews (drag and drop too), fetch()
  * submission with a JSON answer and the success panel. The messages repeat those of
  * app/form/handler.php.
@@ -35,6 +36,7 @@ function init(form) {
   const fileInput = form.querySelector('[data-photos]');
   const thumbs = form.querySelector('[data-thumbs]');
   const deliveryFields = form.querySelector('[data-delivery-fields]');
+  const finishField = form.querySelector('[data-finish-for]');
   let current = 1;
   /** @type {File[]} */
   let files = [];
@@ -62,6 +64,18 @@ function init(form) {
   };
   form.querySelectorAll('input[name="centre"]').forEach((r) => r.addEventListener('change', toggleDelivery));
   toggleDelivery();
+
+  // Only the complete repair asks for a finish: leaving it clears the choice, so none is sent.
+  const needsFinish = () => form.querySelector('input[name="service"]:checked')?.value === finishField.dataset.finishFor;
+  const toggleFinish = () => {
+    const on = needsFinish();
+    finishField.classList.toggle('is-open', on);
+    if (!on) {
+      finishField.querySelectorAll('input:checked').forEach((r) => (r.checked = false));
+      clearField(finishField);
+    }
+  };
+  form.querySelectorAll('input[name="service"]').forEach((r) => r.addEventListener('change', toggleFinish));
 
   const show = (n, focus = true) => {
     current = n;
@@ -94,6 +108,7 @@ function init(form) {
     const e = {};
     if (n === 1) {
       if (!val('service')) e.service = 'Choisissez le type d’intervention.';
+      if (needsFinish() && !val('finition')) e.finition = 'Choisissez la finition.';
       if (!val('wheels')) e.wheels = 'Indiquez le nombre de jantes.';
     }
     if (n === 2) {
@@ -117,6 +132,7 @@ function init(form) {
     const msg = field.querySelector('[data-error]');
     if (msg) msg.textContent = '';
   };
+  toggleFinish(); // after the prefill above, once clearField exists
 
   const clearErrors = () => {
     form.querySelectorAll('[data-field]').forEach(clearField);

@@ -31,9 +31,9 @@
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/base.css?v=tna466">
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/components.css?v=tndt9p">
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/layout.css?v=tndmzr">
-<link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/forms.css?v=tndt9p">
+<link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/forms.css?v=tnj2fz">
 <script type="module" src="/vbm-wheels-apercu/assets/js/site.js?v=tndt9p"></script>
-<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tnfiku"></script>
+<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tnj2gb"></script>
 </head>
 <body class="theme-light">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -143,7 +143,7 @@
     <div class="quote__form">
 <form id="formulaire" class="qf" action="/vbm-wheels-apercu/api/devis.php" method="post" enctype="multipart/form-data" data-quote-form>
   <input type="hidden" name="form" value="devis">
-  <input type="hidden" name="started_at" value="1792874369.fce4bf32082d58af9adb6b70649d87846e960c093d80a7855f7a27db46d3b0b5">  <div class="qf__hp" aria-hidden="true">
+  <input type="hidden" name="started_at" value="1793040339.0261db9b847b59dea8f80a4385d4a6ab66db30cd4a14d06b869519b6449eaf30">  <div class="qf__hp" aria-hidden="true">
     <label>Ne pas remplir ce champ <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
   </div>
 
@@ -166,16 +166,16 @@
       <div class="qf__chips" role="radiogroup" aria-labelledby="lbl-service" aria-describedby="err-service">
         <label class="qf__chip"><input type="radio" name="service" value="devoilage-jantes" required><span>Dévoilage</span></label>
         <label class="qf__chip"><input type="radio" name="service" value="soudure-jantes" required><span>Soudure</span></label>
+        <label class="qf__chip"><input type="radio" name="service" value="reparation-complete" required><span>Réparation complète</span></label>
       </div>
       <p class="qf__error" id="err-service" data-error></p>
     </div>
 
-    <div class="qf__field" data-field="finition">
-      <p class="qf__label" id="lbl-finition">Finition <span class="qf__opt">si besoin</span></p>
+    <div class="qf__field qf__finish" data-field="finition" data-finish-for="reparation-complete">
+      <p class="qf__label" id="lbl-finition">Finition <span class="qf__opt">pour la réparation complète</span></p>
       <div class="qf__chips" role="radiogroup" aria-labelledby="lbl-finition" aria-describedby="err-finition">
         <label class="qf__chip"><input type="radio" name="finition" value="une-couleur"><span>Une couleur</span></label>
         <label class="qf__chip"><input type="radio" name="finition" value="bi-ton"><span>Bi-ton (deux couleurs)</span></label>
-        <label class="qf__chip"><input type="radio" name="finition" value="sans"><span>Sans finition</span></label>
       </div>
       <p class="qf__error" id="err-finition" data-error></p>
     </div>

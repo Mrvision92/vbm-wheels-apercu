@@ -320,13 +320,14 @@
   color: var(--fg-2);
 }
 
-/* Delivery (progressive disclosure) */
+/* Delivery and finish (progressive disclosure) */
 .qf__delivery {
   display: grid;
   gap: 1.75rem;
 }
 
-.qf.is-enhanced .qf__delivery:not(.is-open) {
+.qf.is-enhanced .qf__delivery:not(.is-open),
+.qf.is-enhanced .qf__finish:not(.is-open) {
   display: none;
 }
 
