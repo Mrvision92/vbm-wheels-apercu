@@ -320,14 +320,14 @@
   color: var(--fg-2);
 }
 
-/* Delivery and finish (progressive disclosure) */
+/* Delivery, and the fields of one intervention only (progressive disclosure) */
 .qf__delivery {
   display: grid;
   gap: 1.75rem;
 }
 
 .qf.is-enhanced .qf__delivery:not(.is-open),
-.qf.is-enhanced .qf__finish:not(.is-open) {
+.qf.is-enhanced [data-only-for]:not(.is-open) {
   display: none;
 }
 

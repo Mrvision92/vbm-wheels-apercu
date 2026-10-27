@@ -2,9 +2,10 @@
  * Quote request form (/demande-de-devis/) — port of the <script> of src/components/forms/QuoteForm.astro.
  *
  * Progressive enhancement of app/views/forms/quote-form.php: the form works as one long classic
- * POST without this script. With it: three steps with a progress bar, prefill from the URL
+ * POST without this script. With it: two steps with a progress bar (the rim and its photos, then
+ * the contact details), prefill from the URL
  * (?service=…, ?centre=…, ?livraison=1; a service the form does not offer preselects nothing),
- * the « Finition » field shown for the complete repair only (its data-finish-for),
+ * the finish and the rim size shown for the complete repair only (their data-only-for),
  * inline validation with an error summary, photo previews (drag and drop too), fetch()
  * submission with a JSON answer and the success panel. The messages repeat those of
  * app/form/handler.php.
@@ -36,7 +37,7 @@ function init(form) {
   const fileInput = form.querySelector('[data-photos]');
   const thumbs = form.querySelector('[data-thumbs]');
   const deliveryFields = form.querySelector('[data-delivery-fields]');
-  const finishField = form.querySelector('[data-finish-for]');
+  const onlyFor = [...form.querySelectorAll('[data-only-for]')];
   let current = 1;
   /** @type {File[]} */
   let files = [];
@@ -65,17 +66,19 @@ function init(form) {
   form.querySelectorAll('input[name="centre"]').forEach((r) => r.addEventListener('change', toggleDelivery));
   toggleDelivery();
 
-  // Only the complete repair asks for a finish: leaving it clears the choice, so none is sent.
-  const needsFinish = () => form.querySelector('input[name="service"]:checked')?.value === finishField.dataset.finishFor;
-  const toggleFinish = () => {
-    const on = needsFinish();
-    finishField.classList.toggle('is-open', on);
-    if (!on) {
-      finishField.querySelectorAll('input:checked').forEach((r) => (r.checked = false));
-      clearField(finishField);
-    }
-  };
-  form.querySelectorAll('input[name="service"]').forEach((r) => r.addEventListener('change', toggleFinish));
+  // Fields of one intervention only (the finish and the rim size, for the complete repair): shown
+  // when it is chosen, cleared when it is not, so nothing stale is sent.
+  const isAsked = (field) => form.querySelector('input[name="service"]:checked')?.value === field.dataset.onlyFor;
+  const toggleOnlyFor = () =>
+    onlyFor.forEach((field) => {
+      const on = isAsked(field);
+      field.classList.toggle('is-open', on);
+      if (on) return;
+      field.querySelectorAll('input:checked').forEach((r) => (r.checked = false));
+      field.querySelectorAll('select').forEach((s) => (s.value = ''));
+      clearField(field);
+    });
+  form.querySelectorAll('input[name="service"]').forEach((r) => r.addEventListener('change', toggleOnlyFor));
 
   const show = (n, focus = true) => {
     current = n;
@@ -108,14 +111,12 @@ function init(form) {
     const e = {};
     if (n === 1) {
       if (!val('service')) e.service = 'Choisissez le type d’intervention.';
-      if (needsFinish() && !val('finition')) e.finition = 'Choisissez la finition.';
+      if (isAsked(form.querySelector('[data-field="finition"]')) && !val('finition')) e.finition = 'Choisissez la finition.';
       if (!val('wheels')) e.wheels = 'Indiquez le nombre de jantes.';
-    }
-    if (n === 2) {
       const err = checkFiles(files);
       if (err) e.photos = err;
     }
-    if (n === 3) {
+    if (n === 2) {
       if (val('name').length < 2) e.name = 'Indiquez votre nom.';
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val('email'))) e.email = 'Indiquez une adresse e-mail valide, par exemple nom@exemple.be.';
       if (val('phone') && !/^[0-9 +().\/-]{6,30}$/.test(val('phone'))) e.phone = 'Le numéro de téléphone ne semble pas valide.';
@@ -132,7 +133,7 @@ function init(form) {
     const msg = field.querySelector('[data-error]');
     if (msg) msg.textContent = '';
   };
-  toggleFinish(); // after the prefill above, once clearField exists
+  toggleOnlyFor(); // after the prefill above, once clearField exists
 
   const clearErrors = () => {
     form.querySelectorAll('[data-field]').forEach(clearField);
@@ -176,8 +177,8 @@ function init(form) {
     }
   };
 
-  // Step holding the first error: 1 (the rim), 2 (photos) or 3 (contact details).
-  const stepOf = (errors) => (errors.service || errors.finition || errors.wheels || errors.size || errors.message ? 1 : errors.photos ? 2 : 3);
+  // Step holding the first error: 1 (the rim and its photos) or 2 (contact details).
+  const stepOf = (errors) => (errors.service || errors.finition || errors.wheels || errors.size || errors.message || errors.photos ? 1 : 2);
 
   // Clear a field's error as soon as it is corrected.
   form.addEventListener('input', (ev) => {
@@ -296,7 +297,7 @@ function init(form) {
 
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
-    const all = { ...validateStep(1), ...validateStep(2), ...validateStep(3) };
+    const all = { ...validateStep(1), ...validateStep(2) };
     if (Object.keys(all).length) {
       show(stepOf(all), false);
       return showErrors(all, true);

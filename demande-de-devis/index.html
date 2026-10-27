@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Réparation de jantes : demande de devis | VBM Wheels Repair</title>
-<meta name="description" content="Dévoilage ou soudure : décrivez le problème, joignez des photos de vos jantes et choisissez votre centre ou l’enlèvement. Devis établi après examen.">
+<meta name="description" content="Dévoilage, soudure ou réparation complète : décrivez le problème, joignez des photos de vos jantes et choisissez votre centre ou l’enlèvement. Devis établi après examen.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://mrvision92.github.io/vbm-wheels-apercu/demande-de-devis/">
 <link rel="preload" href="/vbm-wheels-apercu/assets/fonts/mona-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -18,7 +18,7 @@
 <meta property="og:locale" content="fr_BE">
 <meta property="og:site_name" content="VBM Wheels Repair">
 <meta property="og:title" content="Réparation de jantes : demande de devis | VBM Wheels Repair">
-<meta property="og:description" content="Dévoilage ou soudure : décrivez le problème, joignez des photos de vos jantes et choisissez votre centre ou l’enlèvement. Devis établi après examen.">
+<meta property="og:description" content="Dévoilage, soudure ou réparation complète : décrivez le problème, joignez des photos de vos jantes et choisissez votre centre ou l’enlèvement. Devis établi après examen.">
 <meta property="og:url" content="https://mrvision92.github.io/vbm-wheels-apercu/demande-de-devis/">
 <meta property="og:image" content="https://mrvision92.github.io/vbm-wheels-apercu/og/vbm-wheels-repair.png">
 <meta property="og:image:width" content="1200">
@@ -31,9 +31,9 @@
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/base.css?v=tna466">
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/components.css?v=tndt9p">
 <link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/layout.css?v=tndmzr">
-<link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/forms.css?v=tnj2fz">
+<link rel="stylesheet" href="/vbm-wheels-apercu/assets/css/forms.css?v=tnkz05">
 <script type="module" src="/vbm-wheels-apercu/assets/js/site.js?v=tndt9p"></script>
-<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tnj2gb"></script>
+<script type="module" src="/vbm-wheels-apercu/assets/js/quote-form.js?v=tnkz05"></script>
 </head>
 <body class="theme-light">
 <a class="skip-link" href="#contenu">Aller au contenu</a>
@@ -134,7 +134,7 @@
     <div class="phero__text">
       <p class="kicker">Demande de devis</p>
       <h1 class="phero__title">Réparation de jantes.</h1>
-      <p class="lead phero__lead">Dévoilage ou soudure : le devis dépend de l’examen de vos jantes. Quelques photos nous permettent déjà de comprendre la situation et de vous orienter.</p>
+      <p class="lead phero__lead">Dévoilage, soudure ou réparation complète : le devis dépend de l’examen de vos jantes. Quelques photos nous permettent déjà de comprendre la situation et de vous orienter.</p>
     </div>
   </div>
 </header>
@@ -143,7 +143,7 @@
     <div class="quote__form">
 <form id="formulaire" class="qf" action="/vbm-wheels-apercu/api/devis.php" method="post" enctype="multipart/form-data" data-quote-form>
   <input type="hidden" name="form" value="devis">
-  <input type="hidden" name="started_at" value="1793040339.0261db9b847b59dea8f80a4385d4a6ab66db30cd4a14d06b869519b6449eaf30">  <div class="qf__hp" aria-hidden="true">
+  <input type="hidden" name="started_at" value="1793128983.cc4220a594bba19614aafdae19917de40df4e3eed3a97172584c5753251b0419">  <div class="qf__hp" aria-hidden="true">
     <label>Ne pas remplir ce champ <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
   </div>
 
@@ -154,8 +154,7 @@
 
   <ol class="qf__progress" aria-label="Étapes de la demande" data-progress hidden>
     <li data-progress-step="1" aria-current="step"><span>1</span> Votre jante</li>
-    <li data-progress-step="2"><span>2</span> Photos</li>
-    <li data-progress-step="3"><span>3</span> Coordonnées</li>
+    <li data-progress-step="2"><span>2</span> Coordonnées</li>
   </ol>
 
   <fieldset class="qf__step" data-step="1">
@@ -171,7 +170,7 @@
       <p class="qf__error" id="err-service" data-error></p>
     </div>
 
-    <div class="qf__field qf__finish" data-field="finition" data-finish-for="reparation-complete">
+    <div class="qf__field" data-field="finition" data-only-for="reparation-complete">
       <p class="qf__label" id="lbl-finition">Finition <span class="qf__opt">pour la réparation complète</span></p>
       <div class="qf__chips" role="radiogroup" aria-labelledby="lbl-finition" aria-describedby="err-finition">
         <label class="qf__chip"><input type="radio" name="finition" value="une-couleur"><span>Une couleur</span></label>
@@ -193,7 +192,7 @@
         <p class="qf__error" id="err-wheels" data-error></p>
       </div>
 
-      <div class="qf__field" data-field="size">
+      <div class="qf__field" data-field="size" data-only-for="reparation-complete">
         <label class="qf__label" for="f-size">Taille de jante <span class="qf__opt">si vous la connaissez</span></label>
         <div class="qf__select">
           <select id="f-size" name="size" aria-describedby="hint-size err-size">
@@ -224,8 +223,20 @@
     <div class="qf__field" data-field="message">
       <label class="qf__label" for="f-message">Décrivez le problème <span class="qf__opt">facultatif</span></label>
       <textarea id="f-message" name="message" rows="5" maxlength="4000" aria-describedby="hint-message err-message" placeholder="Ex. : vibrations dans le volant depuis un choc, jante qui perd de l’air…"></textarea>
-      <p class="qf__hint" id="hint-message">Où se situe le dommage, depuis quand, finition souhaitée…</p>
+      <p class="qf__hint" id="hint-message">Où se situe le dommage, depuis quand…</p>
       <p class="qf__error" id="err-message" data-error></p>
+    </div>
+
+    <div class="qf__field" data-field="photos">
+      <p class="qf__label" id="lbl-photos">Photos <span class="qf__opt">facultatif, mais très utile</span></p>
+      <p class="qf__intro" id="hint-photos">Photographiez chaque jante entière, de face, à la lumière du jour. Ajoutez un gros plan de chaque dommage. Une photo du flanc du pneu, là où figure sa dimension (par exemple 225/45 R18), nous indique le diamètre de la jante.</p>
+      <label class="qf__drop" for="f-photos" data-drop>
+        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 15.5V4.5M7.5 9 12 4.5 16.5 9"/><path d="M4.5 14.5v5h15v-5"/></svg>        <span class="qf__drop-title">Ajouter des photos</span>
+        <span class="qf__drop-hint">JPEG, PNG, WebP ou HEIC · 6 photos maximum · 8 Mo par photo</span>
+        <input id="f-photos" name="photos[]" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple aria-describedby="hint-photos err-photos" data-photos>
+      </label>
+      <ul class="qf__thumbs" data-thumbs aria-live="polite"></ul>
+      <p class="qf__error" id="err-photos" data-error></p>
     </div>
 
     <div class="qf__nav" data-nav hidden>
@@ -234,27 +245,7 @@
   </fieldset>
 
   <fieldset class="qf__step" data-step="2">
-    <legend class="qf__legend"><span class="qf__legend-num">02</span> Photos <span class="qf__opt">facultatif, mais très utile</span></legend>
-    <p class="qf__intro">Photographiez chaque jante entière, de face, à la lumière du jour. Ajoutez un gros plan de chaque dommage. Une photo du flanc du pneu, là où figure sa dimension (par exemple 225/45 R18), nous indique le diamètre de la jante.</p>
-
-    <div class="qf__field" data-field="photos">
-      <label class="qf__drop" for="f-photos" data-drop>
-        <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M12 15.5V4.5M7.5 9 12 4.5 16.5 9"/><path d="M4.5 14.5v5h15v-5"/></svg>        <span class="qf__drop-title">Ajouter des photos</span>
-        <span class="qf__drop-hint">JPEG, PNG, WebP ou HEIC · 6 photos maximum · 8 Mo par photo</span>
-        <input id="f-photos" name="photos[]" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple aria-describedby="err-photos" data-photos>
-      </label>
-      <ul class="qf__thumbs" data-thumbs aria-live="polite"></ul>
-      <p class="qf__error" id="err-photos" data-error></p>
-    </div>
-
-    <div class="qf__nav" data-nav hidden>
-      <button type="button" class="qf__back" data-prev><svg class="icon qf__flip" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/></svg> Retour</button>
-      <button type="button" class="qf__btn" data-next>Continuer <svg class="icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M4 12h15M13.5 6.5 19 12l-5.5 5.5"/></svg></button>
-    </div>
-  </fieldset>
-
-  <fieldset class="qf__step" data-step="3">
-    <legend class="qf__legend"><span class="qf__legend-num">03</span> Vos coordonnées</legend>
+    <legend class="qf__legend"><span class="qf__legend-num">02</span> Vos coordonnées</legend>
 
     <div class="qf__row">
       <div class="qf__field" data-field="name">
