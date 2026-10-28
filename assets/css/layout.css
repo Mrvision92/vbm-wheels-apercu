@@ -625,8 +625,3 @@ html.menu-open {
 .legal__prose h2 {
   scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
-
-/* Photo credits list closing the legal notice. */
-.credits {
-  font-size: var(--fs-small);
-}
