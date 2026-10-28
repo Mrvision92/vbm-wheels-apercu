@@ -387,7 +387,10 @@
 
 .entry-foot__links {
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem clamp(1rem, 0.4rem + 2.5vw, 1.5rem);
+  white-space: nowrap;
 }
 
 /* underline offset and thickness, focus ring: base.css */
